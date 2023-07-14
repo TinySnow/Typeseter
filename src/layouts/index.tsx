@@ -9,8 +9,6 @@ export default function Layout() {
       route={clientRoutes[0]}
       location={location}
       title="排版器"
-      fixedHeader={true}
-      fixSiderbar
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || menuItemProps.children) {
           return defaultDom;
