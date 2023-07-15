@@ -30,8 +30,12 @@ const PureText = () => {
   const [isProcessed, setIsProcessed] = useState(false);
 
   const option: Option = {
-    indent: true,
-    lineGap: 0,
+    insertIndent: true,
+    lineGap: "none",
+    fixPunctuation: true,
+    deleteBlankLines: true,
+    deleteSpaceInChineseCharacter: true,
+    insertSpaceInChineseAndEnglish: true,
   };
 
   /**
@@ -39,7 +43,7 @@ const PureText = () => {
    * 此函数功能：
    * 1. 设置待处理文本的值，保证 text 的值与用户输入的值实时同步；
    * 2. 每次用户编辑时，都将 isProcessed 设置为 false，
-   *    保证下次排版过的值传进来时，isProcessed 一定为 true
+   *    保证下次排版过的值传进来时，isProcessed 一定为 true。
    *
    * @param value 子组件上传的输入框值
    */
@@ -51,9 +55,9 @@ const PureText = () => {
   /**
    * 用户点击开始排版时触发的函数。
    * 此函数功能：
-   * 1. 排版待处理文本，并将处理后的文本通过 typesetted 传递给子组件
+   * 1. 排版待处理文本，并将处理后的文本通过 typesetted 传递给子组件；
    * 2. 设置 isProcessed 为 true，
-   *    使得子组件的在下一次渲染输入框文本时，将其更改为处理后的文本
+   *    使得子组件的在下一次渲染输入框文本时，将其更改为处理后的文本。
    */
   const handleTypesetClick = () => {
     setTypesetted(typeset(text, option));
