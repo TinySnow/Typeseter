@@ -1,6 +1,6 @@
 interface Option {
   insertIndent: Boolean;
-  lineGap: "none" | "one" | "two";
+  lineGap: number;
   fixPunctuation: Boolean;
   deleteBlankLines: Boolean;
   deleteSpaceInChineseCharacter: Boolean;

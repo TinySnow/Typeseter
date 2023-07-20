@@ -25,7 +25,6 @@ class Flow {
    * 此函数（构造器）功能：
    * 1. 将文本以换行符为界分割成段落（paragraphs 数组）；
    * 2. 去除每段首尾的空白字符（半角空格、全角空格、制表符等）；
-   * 3. 经过上两个步骤后，去除只有空白字符的段落和空行。
    *
    * @param text 传入的原始文本字符串
    */
@@ -34,9 +33,14 @@ class Flow {
       .split("\n")
       .map((paragraph) => paragraph.trim() || null);
   }
-
+  /**
+   * 删除空白行的函数。
+   *
+   * @param bool 是否删除空白行
+   * @returns 如果不删除，直接返回
+   */
   deleteBlankLines(bool: Boolean): Flow {
-    this.paragraphs = this.paragraphs.filter((str) => str !== null);
+    if (bool) this.paragraphs = this.paragraphs.filter((str) => str !== null);
     return this;
   }
 
@@ -111,20 +115,18 @@ class Flow {
 
   /**
    * 每段之间添加空行。
-   * 此函数接受一个 "none" | "one" | "two" 枚举类型，
-   * 分别负责：不添加空行、添加一个空行、添加两个空行，
+   * 负责：不添加空行、添加一个空行、添加两个空行，
    * 考虑后续更改为自定义空行数量。
    *
    * @param number 每段之间添加空行的数量，枚举类型
    */
-  insertLineGap(number: Option["lineGap"]): Flow {
-    if (number !== "none") {
+  insertLineGap(number: number): Flow {
+    if (number !== 0) {
       const p = this.paragraphs;
-      const gap = number === "one" ? 1 : 2;
       this.paragraphs = p.flatMap((item, index) => {
         return index === p.length - 1
           ? item
-          : [item, ...new Array(gap).fill("")];
+          : [item, ...new Array(number === 1 ? 1 : 2).fill("")];
       });
     }
     return this;

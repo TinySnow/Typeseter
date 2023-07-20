@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Layout, Col, Row, Button } from "antd";
+import type { CollapseProps } from "antd";
+import { Layout, Col, Row, Button, Collapse } from "antd";
 import style from "./pure-text.less";
 import { In } from "@/components/input";
+import { PureSetting } from "@/components/pure-setting";
 import { Option } from "@/models/option";
 import { typeset } from "@/utils/typeset";
 
@@ -29,15 +31,6 @@ const PureText = () => {
    */
   const [isProcessed, setIsProcessed] = useState(false);
 
-  const option: Option = {
-    insertIndent: true,
-    lineGap: "none",
-    fixPunctuation: true,
-    deleteBlankLines: true,
-    deleteSpaceInChineseCharacter: true,
-    insertSpaceInChineseAndEnglish: true,
-  };
-
   /**
    * 每次用户输入，调用此函数。
    * 此函数功能：
@@ -60,32 +53,37 @@ const PureText = () => {
    *    使得子组件的在下一次渲染输入框文本时，将其更改为处理后的文本。
    */
   const handleTypesetClick = () => {
+    const option: Option = JSON.parse(
+      localStorage.getItem("pure-text-config") || ""
+    );
     setTypesetted(typeset(text, option));
     setIsProcessed(true);
   };
 
   return (
     <Layout>
-      <Header className={style.headerStyle}>
+      <Header className={style.headerStyle}></Header>
+      <Content className={style.contentStyle}>
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col span={6}>
-            <Button
-              type="primary"
-              size="large"
-              onClick={() => setIsDisplay(!isDisplay)}
-            >
-              {isDisplay ? "收起" : "显示"}设置
-            </Button>
+          <Col span={18}>
+            <Collapse
+              onChange={() => setIsDisplay(!isDisplay)}
+              className={style.collapse}
+              items={[
+                {
+                  key: "1",
+                  label: (isDisplay ? "收起" : "显示") + "设置",
+                  children: <PureSetting />,
+                },
+              ]}
+            />
           </Col>
-          <Col span={12} />
           <Col span={6} className={style.handleBotton}>
             <Button type="primary" size="large" onClick={handleTypesetClick}>
               立即排版
             </Button>
           </Col>
         </Row>
-      </Header>
-      <Content className={style.contentStyle}>
         <In
           typesetted={typesetted}
           isProcessed={isProcessed}
