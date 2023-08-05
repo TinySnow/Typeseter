@@ -1,0 +1,39 @@
+name: Github Pages for typeseter
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write  # To create a PR from that branch
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - name: install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: install pnpm
+        run: npm install -g pnpm
+
+      - name: install umi
+        run: pnpm i @umijs/plugins -D
+
+      - name: install antd
+        run: pnpm i antd @ant-design/pro-layout -S
+      
+      - name: Deploy
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist

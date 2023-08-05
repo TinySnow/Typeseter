@@ -12,4 +12,7 @@ export default defineConfig({
     },
   ],
   npmClient: "pnpm",
+  plugins: ["umi-plugin-gh-pages"],
+  base: "/typeseter/",
+  publicPath: "/typeseter/",
 });
