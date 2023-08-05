@@ -12,4 +12,6 @@ export default defineConfig({
     },
   ],
   npmClient: "pnpm",
+  base: "/Typeseter/",
+  publicPath: "/Typeseter/",
 });
