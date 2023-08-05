@@ -1,4 +1,4 @@
-import { Option } from "@/models/option";
+import { config } from "@/components/pure-setting";
 import {
   chineseCommasFold,
   chineseDotsFold,
@@ -7,10 +7,14 @@ import {
   comma,
   dot,
   dots2ellipsis,
-  englishBrackets2ChineseBrakets,
+  englishBrackets2ChineseBrackets,
   questionMark,
+  bang,
   semicolon,
+  guillemet,
+  chineseDash,
 } from "@/utils/punctuation";
+import { insertSpaceAfterPercentSign } from "@/utils/optional";
 
 class Flow {
   /**
@@ -97,17 +101,32 @@ class Flow {
   fixPunctuation(bool: Boolean): Flow {
     if (bool) {
       let p = this.paragraphs;
-      p = comma(true, p);
+      p = comma(config.comma, p);
       // 注意：多个句点变为省略号，和，句点修正，之间的顺序不能颠倒
-      p = dots2ellipsis(true, p);
-      p = dot(true, p);
-      p = colon(true, p);
-      p = questionMark(true, p);
-      p = semicolon(true, p);
-      p = chineseCommasFold(true, p);
-      p = chineseDotsFold(true, p);
-      p = chineseEllipsisesFold(true, p);
-      p = englishBrackets2ChineseBrakets(true, p);
+      p = dots2ellipsis(config.dots2ellipsis, p);
+      p = dot(config.dot, p);
+      p = colon(config.colon, p);
+      p = questionMark(config.questionMark, p);
+      p = bang(config.bang, p);
+      p = semicolon(config.semicolon, p);
+      p = guillemet(config.guillemet, p);
+      p = chineseDash(config.chineseDash, p);
+      p = chineseCommasFold(config.chineseCommasFold, p);
+      p = chineseDotsFold(config.chineseDotsFold, p);
+      p = chineseEllipsisesFold(config.chineseEllipsisesFold, p);
+      p = englishBrackets2ChineseBrackets(
+        config.englishBrackets2ChineseBrackets,
+        p
+      );
+      this.paragraphs = p;
+    }
+    return this;
+  }
+
+  fixOthers(bool: Boolean): Flow {
+    if (bool) {
+      let p = this.paragraphs;
+      p = insertSpaceAfterPercentSign(config.insertSpaceAfterPercentSign, p);
       this.paragraphs = p;
     }
     return this;

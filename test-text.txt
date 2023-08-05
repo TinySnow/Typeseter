@@ -1,0 +1,36 @@
+标点修正1:半角逗号,修正为全角,
+标点修正2:半角句点.修正为全角句号.
+标点修正3：半角冒号:修正为全角:
+标点修正4:半角问号?修正为全角?
+标点修正5:测试一句:"正常的中文直接引用?"
+标点修正6：连续的句号。。修正成为一个省略号。。。。。。。。。。
+标点修正7:连续的句点..修正为一个省略号.......
+标点修正8:多余的省略号…………合并为一个……………………
+标点修正9：连续的逗号，，合并为一个逗号，，，，
+标点修正10:修正不标准的书名号，比如:<<西游记》《三国演义>>«水浒传》《红楼梦»
+标点修正11:网络文章中经常出现的波浪线，比如~~~~~~~~~`````会被转换成标准的破折号。
+标点修正11:两个连续的dash“--”修正为破折号——
+标点修正12（可选）：外文人名之间的空格符·两边加空格
+标点修正13：(包含中文的English括号)变为中文
+标点修正14: 半角分号;修正为全角;
+标点修正15: 半角感叹号!修正为全角！
+保持英文句子和网址等之中的符号不被转换：eg. http://www.gidot.net/
+中英文之间插入空格:中文English之间插入half width空格
+可选修正1：在百分号之后添加空格：上涨了5%的利润 => 上涨了 5% 的利润
+Keep English sentence safe.
+Keep English comma safe, in pure english sentence.
+Keep English colon safe: in pure english sentence.
+Keep English semicolon safe, in pure english sentence;
+Test a terminology FYI(For Your Information, 给你的信息).
+Test English bracket(that has no chinese characters in it).
+Just a long sentence, using for testing all the punctuations. Give it a try! Make sure to keep all english punctuation safe;
+删 除  中文   之    间 的空 格
+          删除段首空格
+删除段尾空格             
+
+删除以上空行
+                  
+删除以上包含半角空格的空行
+　　　　　　
+删除以上包含全角空格的空行
+　　测试删除　　句首和句尾的全角空格　　
