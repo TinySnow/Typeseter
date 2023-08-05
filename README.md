@@ -13,7 +13,7 @@
 
 ### Entry Point/项目入口
 
-- (Click Here/项目地址)[https://tinysnow.github.io/Typeseter]
+- [Click Here/项目地址](https://tinysnow.github.io/Typeseter)
 
 ### Example/使用示例
 
@@ -62,20 +62,20 @@
     - [ ] 中文双引号 `“”`/Chinese double quotes
     - [ ] 中文单引号 `‘’`/Chinese single quotes
 - [ ] 统一间隔号/Unify the spacer
-    - 日式全角片假名中点 `・`/Japanese full-width katakana midpoint 
-    - 标准中文间隔号 `·`/Standard Chinese spacer
-    - 无序列表序号用作间隔号 `•`/Unordered list sign using for spacer
+    - [ ]日式全角片假名中点 `・`/Japanese full-width katakana midpoint 
+    - [ ]标准中文间隔号 `·`/Standard Chinese spacer
+    - [ ]无序列表序号用作间隔号 `•`/Unordered list sign using for spacer
 - [ ] 自定义间隔号两旁是否加半角空格/Custom whether add half-width space at both sides of spacer
 - [ ] Markdown 文章排版/Typesetting for Markdown passages
-    - [ ] 三个以上空行自动转 `\n<br />\n`
-    - [ ] 单段落关键词自动转相应 Header（例如：`正文` => `## 正文`）
+    - [ ] 三个以上空行自动转 `\n<br />\n`/More than three blank lines can be automatically converted to `\n<br />\n`
+    - [ ] 单关键词段落自动转相应 Header（例如：`正文` => `## 正文`）/Single-keyword paragraphs can be automatically converted to the corresponding Header (for example: `text` => `## text`)
 - [ ] 列出规范参考来源/List the reference of specification
 - [ ] 在页面上添加项目地址/Add the project address at page
 - [ ] 写出 Github Actions 配置文件并部署到 Github Pages/Write a Github Actions profile and deploy to Github Pages
 
 ## Framework/框架
 
-- (Umi)[https://v3.umijs.org] Framework(Based on (React)[https://react.dev])./(Umi)[https://v3.umijs.org] 框架（基于 (React)[https://react.dev]）。
+- [Umi](https://v3.umijs.org) Framework(Based on [React](https://react.dev))./[Umi](https://v3.umijs.org) 框架（基于 [React](https://react.dev)）。
 
 ## Contribution/参与项目
 
