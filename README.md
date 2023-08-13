@@ -51,6 +51,7 @@
     - [x] 删除多余的中文逗号　/　Delete the redundent Chinese comma
     - [x] 删除多余的中文省略号　/　Delete the redundent Chinese ellipsis
     - [x] 多个中文句号转换为省略号　/　Convert multiple Chinese periods to Chinese ellipsis
+    - [x] 删除中文和中文标点之间的空格　/　Delete the space between Chinese Characters and Chinese Punctuations
 - [ ] 折行处理（Shift Enter）　/　Wrapping paragraph
 - [ ] 【重要】能够撤销（Ctrl+Z）和重做（Ctrl+Shift+Z&Ctrl+Y）　/　【Important】Can undo(Ctrl+Z) and redo(Ctrl+Shift+Z&Ctrl+Y)
 - [ ] 【重要】排版后自动全选文本　/　【Important】Automatic select all the text after typesetted

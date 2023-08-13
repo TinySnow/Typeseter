@@ -23,6 +23,7 @@ import {
   FIX_GUILLEMET,
   FIX_CHINESE_DASH,
   INSERT_SPACE_AFTER_PERCENT_SIGN,
+  DELETE_SPACE_IBETWEEN_CHINESE_CHARACTERS_AND_CHINESE_PUNCTUATIONS,
 } from "@/models/constants";
 
 /**
@@ -63,6 +64,10 @@ const selections = [
   { label: "插入段首缩进", value: INSERT_INDENT },
   { label: "删除汉字之间的空格", value: DELETE_SPACE_IN_CHINESE_CHARACTER },
   { label: "中英文之间插入空格", value: INSERT_SPACE_IN_CHINESE_AND_ENGLISH },
+  {
+    label: "删除汉字和标点之间的空格",
+    value: DELETE_SPACE_IBETWEEN_CHINESE_CHARACTERS_AND_CHINESE_PUNCTUATIONS,
+  },
 ];
 
 /**
@@ -100,6 +105,10 @@ const others = [
 const defaultValue = (): CheckboxValueType[] => {
   const result = [];
   if (config.deleteBlankLines) result.push(DELETE_BLANK_LINES);
+  if (config.deleteSpaceBetweenChineseCharactersAndChinesePunctuations)
+    result.push(
+      DELETE_SPACE_IBETWEEN_CHINESE_CHARACTERS_AND_CHINESE_PUNCTUATIONS
+    );
   if (config.insertIndent) result.push(INSERT_INDENT);
   if (config.deleteSpaceInChineseCharacter)
     result.push(DELETE_SPACE_IN_CHINESE_CHARACTER);
@@ -121,8 +130,8 @@ const defaultValue = (): CheckboxValueType[] => {
   if (config.englishBrackets2ChineseBrackets)
     result.push(FIX_ENGLISH_BRACKETS_TO_CHINESE_BRACKETS);
 
-
-  if (config.insertSpaceAfterPercentSign) result.push(INSERT_SPACE_AFTER_PERCENT_SIGN);
+  if (config.insertSpaceAfterPercentSign)
+    result.push(INSERT_SPACE_AFTER_PERCENT_SIGN);
   return result;
 };
 
@@ -157,6 +166,10 @@ const PureSetting: React.FC = () => {
     config = {
       ...config,
       deleteBlankLines: checkedValues.includes(DELETE_BLANK_LINES),
+      deleteSpaceBetweenChineseCharactersAndChinesePunctuations:
+        checkedValues.includes(
+          DELETE_SPACE_IBETWEEN_CHINESE_CHARACTERS_AND_CHINESE_PUNCTUATIONS
+        ),
       insertIndent: checkedValues.includes(INSERT_INDENT),
       deleteSpaceInChineseCharacter: checkedValues.includes(
         DELETE_SPACE_IN_CHINESE_CHARACTER

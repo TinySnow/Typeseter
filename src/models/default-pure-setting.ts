@@ -6,6 +6,7 @@ const defaultPTS: Option = {
   deleteBlankLines: true,
   deleteSpaceInChineseCharacter: true,
   insertSpaceInChineseAndEnglish: true,
+  deleteSpaceBetweenChineseCharactersAndChinesePunctuations: true,
 
   fixPunctuation: true,
   comma: true,

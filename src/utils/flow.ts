@@ -77,6 +77,25 @@ class Flow {
       );
     return this;
   }
+  /**
+   * 删除中文汉字与中文标点之间空白字符的函数。
+   *
+   * @param bool 是否删除中文汉字与中文标点之间的空白字符
+   * @returns 如果不删除，直接返回
+   */
+  deleteSpaceBetweenChineseCharactersAndChinesePunctuations(
+    bool: Boolean
+  ): Flow {
+    if (bool)
+      this.paragraphs = this.paragraphs.map((s: string | null | undefined) =>
+        // 注意：此处正则表达式使用了零宽断言，属于高级语法
+        s?.replaceAll(
+          /(?<=\p{Script=Han})\s+(?=[，。；‘’【】（）￥《》：“”…！？、~～·])|(?<=[，。；‘’【】（）￥《》：“”…！？、~～·])\s+(?=\p{Script=Han})/gu,
+          ""
+        )
+      );
+    return this;
+  }
 
   /**
    * 在中英文之间插入半角空格的函数。

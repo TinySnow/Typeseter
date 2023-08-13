@@ -2,6 +2,7 @@ interface Option {
   insertIndent: Boolean;
   lineGap: number;
   deleteBlankLines: Boolean;
+  deleteSpaceBetweenChineseCharactersAndChinesePunctuations: Boolean;
   deleteSpaceInChineseCharacter: Boolean;
   insertSpaceInChineseAndEnglish: Boolean;
 

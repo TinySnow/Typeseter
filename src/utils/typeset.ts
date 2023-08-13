@@ -5,6 +5,9 @@ const typeset = (text: string, o: Option): string => {
   const flow = new Flow(text);
   flow
     .deleteBlankLines(o.deleteBlankLines)
+    .deleteSpaceBetweenChineseCharactersAndChinesePunctuations(
+      o.deleteSpaceBetweenChineseCharactersAndChinesePunctuations
+    )
     .deleteSpaceInChineseCharacter(o.deleteSpaceInChineseCharacter)
     .insertIndent(o.insertIndent)
     // 标点修正比较多，归为一个函数
