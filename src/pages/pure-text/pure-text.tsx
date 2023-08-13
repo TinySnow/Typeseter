@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import type { CollapseProps } from "antd";
 import { Layout, Col, Row, Button, Collapse } from "antd";
 import style from "./pure-text.less";
 import { In } from "@/components/input";
 import { PureSetting } from "@/components/pure-setting";
 import { Option } from "@/models/option";
 import { typeset } from "@/utils/typeset";
+import Feeter from "@/components/footer";
+import Link from "antd/es/typography/Link";
 
 const { Header, Footer, Content } = Layout;
 
@@ -90,7 +91,10 @@ const PureText = () => {
           onChange={handleTextChange}
         />
       </Content>
-      <Footer className={style.footerStyle}>Footer</Footer>
+      <Footer className={style.footerStyle}>
+        {/* <Feeter /> */}
+        <Link href="https://github.com/TinySnow/Typeseter">Github</Link>
+      </Footer>
     </Layout>
   );
 };
