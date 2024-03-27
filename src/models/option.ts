@@ -1,9 +1,15 @@
 interface Option {
   insertIndent: Boolean;
+
   lineGap: number;
+  customedLineBreaker: string;
+
   deleteBlankLines: Boolean;
+
   deleteSpaceBetweenChineseCharactersAndChinesePunctuations: Boolean;
+
   deleteSpaceInChineseCharacter: Boolean;
+
   insertSpaceInChineseAndEnglish: Boolean;
 
   fixPunctuation: Boolean;

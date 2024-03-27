@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type { RadioChangeEvent } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
-import { Checkbox, Radio, Divider, Card } from "antd";
+import { Checkbox, Radio, Divider, Input } from "antd";
 import { Option } from "@/models/option";
 import { defaultPTS } from "@/models/default-pure-setting";
 import {
@@ -140,19 +140,41 @@ const PureSetting: React.FC = () => {
    * 添加空行的数量
    */
   const [lineGapNumber, setLineGapNumber] = useState(config.lineGap);
+  /**
+   * 控制自定义输入框的显示
+   */
+  const [customInputVisible, setCustomInputVisible] = useState(false);
 
   /**
+   * 自定义段落分隔符
+   */
+  const [lineBreaker, setLineBreaker] = useState(config.customedLineBreaker);
+
+  const handleLineBreakerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    config.customedLineBreaker = event.target.value;
+    setLineBreaker(event.target.value);
+    refreshConfig(config);
+  };
+
+  /**
+   * Handles the change of the line gap radio button.
+   * This function updates the state and config accordingly.
    * 修改添加空行数量时触发的函数。
    * 修改后立即写入本地存储。
-   *
-   * @param e antd 的单选框事件
+   * @param {RadioChangeEvent} event - The event triggered by the radio button change.
    */
-  const changeLineNumber = (e: RadioChangeEvent) => {
-    setLineGapNumber(e.target.value);
-    config = {
-      ...config,
-      lineGap: e.target.value,
-    };
+  const handleLineGapChange = (event: RadioChangeEvent) => {
+    // Get the new line gap value from the event target
+    const newLineGapValue = event.target.value;
+    // Update the state with the new custom input visibility
+    setCustomInputVisible(newLineGapValue === -1);
+
+    // Update the config with the new line gap value
+    config.lineGap = newLineGapValue;
+    // Update the state with the new line gap number
+    setLineGapNumber(newLineGapValue);
+
+    // Refresh the config in the local storage
     refreshConfig(config);
   };
 
@@ -233,10 +255,18 @@ const PureSetting: React.FC = () => {
       </div>
       <Divider plain>空行修正</Divider>
       <div>
-        <Radio.Group onChange={changeLineNumber} value={lineGapNumber}>
+        <Radio.Group onChange={handleLineGapChange} value={lineGapNumber}>
           <Radio value={0}>段落间不空行</Radio>
           <Radio value={1}>段落间空一行</Radio>
           <Radio value={2}>段落间空两行</Radio>
+          <Radio value={-1}>自定义</Radio>
+          {customInputVisible && (
+            <Input
+              placeholder="自定义段落分隔符"
+              onChange={handleLineBreakerChange}
+              value={lineBreaker}
+            />
+          )}
         </Radio.Group>
       </div>
       <Divider plain>标点修正（英变中）</Divider>

@@ -2,7 +2,10 @@ import { Option } from "@/models/option";
 
 const defaultPTS: Option = {
   insertIndent: true,
+
   lineGap: 0,
+  customedLineBreaker: "",
+
   deleteBlankLines: true,
   deleteSpaceInChineseCharacter: true,
   insertSpaceInChineseAndEnglish: true,

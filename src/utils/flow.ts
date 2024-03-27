@@ -158,13 +158,18 @@ class Flow {
    *
    * @param number 每段之间添加空行的数量，枚举类型
    */
-  insertLineGap(number: number): Flow {
+  insertLineGap(number: number, splitter: string): Flow {
     if (number !== 0) {
       const p = this.paragraphs;
       this.paragraphs = p.flatMap((item, index) => {
         return index === p.length - 1
           ? item
-          : [item, ...new Array(number === 1 ? 1 : 2).fill("")];
+          : [
+              item,
+              ...new Array(number === -1 ? 1 : number).fill(
+                number === -1 ? splitter : ""
+              ),
+            ];
       });
     }
     return this;
