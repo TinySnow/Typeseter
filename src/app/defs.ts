@@ -1,4 +1,4 @@
-import type { BoolKey, SettingDef } from "./types";
+﻿import type { BoolKey, SettingDef } from "./types";
 
 const defs: SettingDef[] = [
   { key: "deleteBlankLines", label: "删除原始空行", containerId: "common-settings" },
@@ -25,8 +25,13 @@ const defs: SettingDef[] = [
   { key: "questionMark", label: "问号", containerId: "punctuation-settings" },
   { key: "semicolon", label: "分号", containerId: "punctuation-settings" },
   {
+    key: "enQuotes2CnQuotes",
+    label: "引号",
+    containerId: "punctuation-settings",
+  },
+  {
     key: "englishBrackets2ChineseBrackets",
-    label: "括号（英文转中文）",
+    label: "括号",
     containerId: "punctuation-settings",
   },
   { key: "guillemet", label: "书名号", containerId: "punctuation-settings" },
@@ -49,3 +54,4 @@ const defs: SettingDef[] = [
 const mdOffKeys: ReadonlyArray<BoolKey> = ["deleteBlankLines", "insertIndent"];
 
 export { defs, mdOffKeys };
+

@@ -6,6 +6,7 @@ import {
   dot,
   dotsToEll,
   enBr2CnBr,
+  enQ2CnQ,
   fixGuil,
   foldCnCommas,
   foldCnDots,
@@ -29,6 +30,7 @@ const punctRule: Rule = {
     qMark(opt.questionMark, paras);
     bang(opt.bang, paras);
     semi(opt.semicolon, paras);
+    enQ2CnQ(opt.enQuotes2CnQuotes, paras);
     fixGuil(opt.guillemet, paras);
     cnDash(opt.chineseDash, paras);
     foldCnCommas(opt.chineseCommasFold, paras);

@@ -19,6 +19,7 @@ const defaultPTS: Option = {
   bang: true,
   questionMark: true,
   semicolon: true,
+  enQuotes2CnQuotes: true,
   guillemet: true,
   chineseDash: true,
   chineseCommasFold: true,

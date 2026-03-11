@@ -20,6 +20,7 @@ interface Option {
   bang: boolean;
   questionMark: boolean;
   semicolon: boolean;
+  enQuotes2CnQuotes: boolean;
   guillemet: boolean;
   chineseDash: boolean;
   chineseCommasFold: boolean;
