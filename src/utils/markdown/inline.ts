@@ -1,3 +1,10 @@
+/**
+ * Markdown 行内排版器：
+ * - 先拆分行内代码范围（`...`），代码内容不改；
+ * - 再识别链接/图片/URL token，避免修改 URL 本体；
+ * - 剩余文本片段交给纯文本排版核心处理。
+ */
+
 import type { Option } from "../../models/option";
 import { typeset } from "../typeset";
 import { keepWrap } from "./shared";
@@ -149,4 +156,4 @@ function fmtFrag(frag: string, opt: Option): string {
   return `${lead}${typeset(core, opt)}${tail}`;
 }
 
-export { fmtMdLine, fmtMdLine as typesetMdLine };
+export { fmtMdLine };

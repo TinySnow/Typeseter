@@ -1,3 +1,9 @@
+/**
+ * DOM 引用与查询工具：
+ * - 统一页面元素获取；
+ * - 提供模式单选框与设置勾选框查询函数。
+ */
+
 import type { BoolKey } from "./types";
 
 type Refs = {

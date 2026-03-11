@@ -1,3 +1,7 @@
+/**
+ * 默认配置：用于首次加载与“重置设置”。
+ */
+
 import { Option } from "./option";
 
 const defaultPTS: Option = {

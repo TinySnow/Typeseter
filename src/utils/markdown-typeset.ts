@@ -1,3 +1,10 @@
+/**
+ * Markdown 排版入口：
+ * - 逐行判定是否需要保护；
+ * - 普通文本行走行内排版；
+ * - 可选输出 KEEP 保护标记用于可视化预览。
+ */
+
 import type { Option } from "../models/option";
 import { lineGuard } from "./markdown/line-guard";
 import { fmtMdLine } from "./markdown/inline";

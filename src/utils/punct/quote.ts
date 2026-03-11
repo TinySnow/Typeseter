@@ -1,3 +1,12 @@
+/**
+ * 引号转换：英文单双引号 -> 中文引号。
+ *
+ * 设计要点：
+ * - 使用跨段状态，支持“长对话跨多段只在最后一段闭合”的中文写法；
+ * - 对 ASCII 单词内部撇号（don't / rock'n'roll）保持不变；
+ * - 结合前后文标点启发式判定开/闭引号。
+ */
+
 import { Paras } from "./types";
 
 type QState = {
@@ -23,12 +32,6 @@ const OPEN_PREV = new Set<string>([
   "，",
   ";",
   "；",
-  ".",
-  "。",
-  "!",
-  "！",
-  "?",
-  "？",
   "、",
   "-",
   "—",
@@ -99,7 +102,7 @@ function fixLineQuotes(line: string, st: QState): string {
       const prevRaw = i > 0 ? line[i - 1] : null;
       const nextRaw = i + 1 < line.length ? line[i + 1] : null;
 
-      // Keep apostrophes inside ASCII words, e.g. don't / rock'n'roll.
+      // ASCII 单词内部的撇号不转换。
       if (isAsciiWord(prevRaw) && isAsciiWord(nextRaw)) {
         out += ch;
         continue;

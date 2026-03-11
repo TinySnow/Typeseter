@@ -1,10 +1,13 @@
+/**
+ * 标点规则公共工具：对段落数组执行原地 map。
+ */
+
 import { Paras } from "./types";
 
 /**
  * 对段落数组执行原地 map。
- * 说明：
- * - 采用原地修改，减少中间数组分配；
- * - 上层规则链本身就是顺序变换流程，适合这种写法。
+ * - 只处理非空段，避免无意义字符串创建；
+ * - 规则链按顺序复用同一份数组，减少内存抖动。
  */
 function mapP(paras: Paras, fn: (s: string) => string): Paras {
   for (let i = 0; i < paras.length; i += 1) {

@@ -1,9 +1,9 @@
+/**
+ * 正则能力探测：
+ * - 仅用于 UI 层提示“高级正则不支持”场景；
+ * - 结果做一次缓存，避免重复创建 RegExp。
+ */
 let advancedRegexSupported: boolean | null = null;
-
-// Basic Han ranges used by fallback regex when Unicode Script escapes are unavailable.
-const HAN_CLASS = "[\\u3400-\\u4DBF\\u4E00-\\u9FFF\\uF900-\\uFAFF]";
-const ASCII_WORD_CLASS = "[A-Za-z0-9_]";
-const CHINESE_PUNCTUATION_CLASS = "[，。；‘’【】（）￥《》：“”…！？、~～·]";
 
 function supportsAdvancedRegex(): boolean {
   if (advancedRegexSupported !== null) {
@@ -11,6 +11,7 @@ function supportsAdvancedRegex(): boolean {
   }
 
   try {
+    // 代表性检测：lookbehind + Unicode Script。
     new RegExp("(?<=\\p{Script=Han})\\s+(?=\\p{Script=Han})", "gu");
     advancedRegexSupported = true;
   } catch {
@@ -20,9 +21,4 @@ function supportsAdvancedRegex(): boolean {
   return advancedRegexSupported;
 }
 
-export {
-  supportsAdvancedRegex,
-  HAN_CLASS,
-  ASCII_WORD_CLASS,
-  CHINESE_PUNCTUATION_CLASS,
-};
+export { supportsAdvancedRegex };

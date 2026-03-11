@@ -63,9 +63,8 @@ npm run build
 
 ## 回归样例（请保留）
 
-- `test-text.txt`（原始样例）
-- `test-text-plain-regression.txt`（纯文本回归样例）
-- `test-text-markdown-regression.md`（Markdown 回归样例）
+- `tests/case/test-text-plain-regression.txt`（纯文本回归样例）
+- `tests/case/test-text-markdown-regression.md`（Markdown 回归样例）
 
 ## 待完善
 

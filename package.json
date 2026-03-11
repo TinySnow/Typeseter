@@ -6,7 +6,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "vite",
-    "deploy": "npm run build"
+    "deploy": "npm run build",
+    "test:baseline": "node scripts/regression.mjs",
+    "test:baseline:update": "node scripts/regression.mjs --update"
   },
   "devDependencies": {
     "typescript": "^5.1.6",

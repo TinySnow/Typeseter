@@ -1,16 +1,16 @@
+import type { Option } from "../../models/option";
+import { isAsciiWord, isCnPunc, isDigit, isHan, isWs, nextNonWs, skipWs } from "../chars";
 import { mapP } from "./shared";
-import { Rule } from "./types";
-import { isAsciiWord, isCnPunc, isHan, isWs, nextNonWs } from "../chars";
+import type { Rule } from "./types";
 
 /**
- * 纯文本空格类规则。
- * 设计目标：
- * 1) 去掉对 lookbehind / Unicode Script 正则的依赖；
- * 2) 用统一扫描器实现上下文判定，减少“高级正则 + fallback 正则”的双维护成本；
- * 3) 与原开关行为保持一致。
+ * 纯文本核心总线规则（单次遍历扫描）。
+ *
+ * 目标：把原先分散在多个规则中的线性文本处理（空格 / 拉丁标点 / 百分号空格）
+ * 合并到一条扫描链中，减少重复遍历次数。
  */
 
-/** 删除空白段（toParas 后空行会是 null）。 */
+/** 删除空段。 */
 const rmBlankRule: Rule = {
   id: "deleteBlankLines",
   apply: (paras, opt) => {
@@ -21,40 +21,7 @@ const rmBlankRule: Rule = {
   },
 };
 
-/**
- * 删除“汉字 <空白> 中文标点 / 中文标点 <空白> 汉字”之间的空白。
- * 例如：
- * - "中文 ，测试" -> "中文，测试"
- * - "中文， 测试" -> "中文，测试"
- */
-const rmCnPuncSpRule: Rule = {
-  id: "deleteSpaceBetweenChineseCharactersAndChinesePunctuations",
-  apply: (paras, opt) => {
-    if (!opt.deleteSpaceBetweenChineseCharactersAndChinesePunctuations) {
-      return paras;
-    }
-
-    return mapP(paras, (s) =>
-      stripWsByCtx(s, (prev, next) => {
-        return (isHan(prev) && isCnPunc(next)) || (isCnPunc(prev) && isHan(next));
-      })
-    );
-  },
-};
-
-/** 删除“汉字 <空白> 汉字”之间的空白。 */
-const rmCnSpRule: Rule = {
-  id: "deleteSpaceInChineseCharacter",
-  apply: (paras, opt) => {
-    if (!opt.deleteSpaceInChineseCharacter) {
-      return paras;
-    }
-
-    return mapP(paras, (s) => stripWsByCtx(s, (prev, next) => isHan(prev) && isHan(next)));
-  },
-};
-
-/** 段首插入两个全角空格。 */
+/** 段首缩进（两个全角空格）。 */
 const insIndentRule: Rule = {
   id: "insertIndent",
   apply: (paras, opt) => {
@@ -66,93 +33,210 @@ const insIndentRule: Rule = {
 };
 
 /**
- * 在“汉字-ASCII词字符”边界插入半角空格。
- * 例如：
- * - 中文English -> 中文 English
- * - English中文 -> English 中文
+ * 核心扫描规则：
+ * - 删除中文相关空白（按开关）
+ * - 拉丁标点按中文上下文转换（按开关）
+ * - 中英文边界插入空格（按开关）
+ * - 百分号后空格（按开关）
  */
-const insCnEnSpRule: Rule = {
-  id: "insertSpaceInChineseAndEnglish",
-  apply: (paras, opt) => {
-    if (!opt.insertSpaceInChineseAndEnglish) {
-      return paras;
-    }
-
-    return mapP(paras, insCnEnSp);
-  },
+const coreRule: Rule = {
+  id: "coreNormalize",
+  apply: (paras, opt) => mapP(paras, (line) => normalizeLine(line, opt)),
 };
 
-/**
- * 上下文感知的空白折叠器。
- * 扫描到连续空白段时：
- * - 若 shouldDrop(prevNonWs, nextNonWs) 为 true，则整段空白删除；
- * - 否则保留原样（不改变空白内容和长度）。
- */
-function stripWsByCtx(
-  text: string,
-  shouldDrop: (prevNonWs: string, nextNonWs: string) => boolean
-): string {
+function normalizeLine(line: string, opt: Option): string {
   let out = "";
-  let prevNonWs: string | null = null;
+  let prevRawNonWs: string | null = null;
 
-  for (let i = 0; i < text.length; i += 1) {
-    const ch = text[i];
+  for (let i = 0; i < line.length; i += 1) {
+    const ch = line[i];
 
-    if (!isWs(ch)) {
-      out += ch;
-      prevNonWs = ch;
-      continue;
-    }
+    if (isWs(ch)) {
+      // 按旧规则语义：删除目标上下文里的连续空白块，其余空白保持原样。
+      let j = i;
+      while (j < line.length && isWs(line[j])) {
+        j += 1;
+      }
 
-    // 找到一整段连续空白 [i, j)
-    let j = i;
-    while (j < text.length && isWs(text[j])) {
-      j += 1;
-    }
+      const next = nextNonWs(line, j);
+      const dropCnCn =
+        opt.deleteSpaceInChineseCharacter &&
+        prevRawNonWs !== null &&
+        next !== null &&
+        isHan(prevRawNonWs) &&
+        isHan(next);
 
-    const next = nextNonWs(text, j);
-    if (prevNonWs && next && shouldDrop(prevNonWs, next)) {
-      // 删除这段空白
+      const dropCnPunc =
+        opt.deleteSpaceBetweenChineseCharactersAndChinesePunctuations &&
+        prevRawNonWs !== null &&
+        next !== null &&
+        ((isHan(prevRawNonWs) && isCnPunc(next)) ||
+          (isCnPunc(prevRawNonWs) && isHan(next)));
+
+      if (!dropCnCn && !dropCnPunc) {
+        out += line.slice(i, j);
+      }
+
       i = j - 1;
       continue;
     }
 
-    // 非目标上下文，原样保留
-    out += text.slice(i, j);
-    i = j - 1;
-  }
+    // dots2ellipsis 的历史顺序在 dot 之前；这里保持该优先级。
+    if (opt.fixPunctuation && opt.dots2ellipsis && ch === ".") {
+      const runLen = countDotRun(line, i);
+      if (runLen >= 3) {
+        out += "……";
+        prevRawNonWs = ".";
+        i += runLen - 1;
+        continue;
+      }
+    }
 
-  return out;
-}
-
-/**
- * 在中英文边界插空格。
- * 注意：这里只看相邻字符，不主动吞掉已有空白；
- * 因此该函数不会破坏用户原有的额外间距。
- */
-function insCnEnSp(text: string): string {
-  if (text.length < 2) {
-    return text;
-  }
-
-  let out = "";
-  for (let i = 0; i < text.length; i += 1) {
-    const cur = text[i];
-    const next = i + 1 < text.length ? text[i + 1] : null;
-    out += cur;
-
-    if (!next) {
+    const fixed = fixLatPuncAt(line, i, ch, opt);
+    if (fixed) {
+      out += fixed.out;
+      prevRawNonWs = ch;
+      i = fixed.nextIdx - 1;
       continue;
     }
 
-    const needSp = (isHan(cur) && isAsciiWord(next)) || (isAsciiWord(cur) && isHan(next));
+    out += ch;
 
-    if (needSp) {
-      out += " ";
+    // 可选规则：百分号后如果紧跟汉字，补一个半角空格。
+    if (opt.fixOthers && opt.insertSpaceAfterPercentSign && ch === "%") {
+      const next = i + 1 < line.length ? line[i + 1] : null;
+      if (isHan(next)) {
+        out += " ";
+      }
     }
+
+    // 中英文边界插空格（仅当原文本是相邻字符）。
+    if (opt.insertSpaceInChineseAndEnglish) {
+      const next = i + 1 < line.length ? line[i + 1] : null;
+      if (next && !isWs(next) && shouldInsCnEnSp(ch, next)) {
+        out += " ";
+      }
+    }
+
+    prevRawNonWs = ch;
+  }
+
+  // 保持历史行为：dot 修正后恢复段首编号的句点。
+  if (opt.fixPunctuation && opt.dot) {
+    return recoverListDotPrefix(out);
   }
 
   return out;
 }
 
-export { rmBlankRule, rmCnPuncSpRule, rmCnSpRule, insIndentRule, insCnEnSpRule };
+/** 在当前位置按上下文尝试做拉丁标点转换。 */
+function fixLatPuncAt(
+  line: string,
+  i: number,
+  ch: string,
+  opt: Option
+): { out: string; nextIdx: number } | null {
+  if (!opt.fixPunctuation) {
+    return null;
+  }
+
+  const to = mapLatPunc(ch, opt);
+  if (!to) {
+    return null;
+  }
+
+  // 与旧实现一致：前面必须至少有一个字符；
+  // 且（前一字符是汉字，或后面第一个非空白字符是汉字）才进行转换。
+  const prev = i > 0 ? line[i - 1] : null;
+  const next = nextNonWs(line, i + 1);
+  const shouldFix = prev !== null && (isHan(prev) || isHan(next));
+
+  if (!shouldFix) {
+    return null;
+  }
+
+  return {
+    out: to,
+    nextIdx: skipWs(line, i + 1),
+  };
+}
+
+/** 根据开关把拉丁标点映射到中文标点。 */
+function mapLatPunc(ch: string, opt: Option): string | null {
+  if (ch === "," && opt.comma) {
+    return "，";
+  }
+  if (ch === "." && opt.dot) {
+    return "。";
+  }
+  if (ch === ":" && opt.colon) {
+    return "：";
+  }
+  if (ch === "?" && opt.questionMark) {
+    return "？";
+  }
+  if (ch === "!" && opt.bang) {
+    return "！";
+  }
+  if (ch === ";" && opt.semicolon) {
+    return "；";
+  }
+  return null;
+}
+
+/** 统计从 start 开始连续 '.' 的数量。 */
+function countDotRun(text: string, start: number): number {
+  let i = start;
+  while (i < text.length && text[i] === ".") {
+    i += 1;
+  }
+  return i - start;
+}
+
+/** 判断是否需要在相邻字符之间插入中英文空格。 */
+function shouldInsCnEnSp(left: string, right: string): boolean {
+  return (
+    (isHan(left) && isAsciiWord(right)) ||
+    (isAsciiWord(left) && isHan(right))
+  );
+}
+
+/**
+ * 恢复段首序号句点：
+ * - 1。 -> 1. 
+ * - 1.2.3。 -> 1.2.3. 
+ */
+function recoverListDotPrefix(line: string): string {
+  let i = 0;
+  while (i < line.length && isWs(line[i])) {
+    i += 1;
+  }
+
+  let p = i;
+  if (!isDigit(line[p] ?? null)) {
+    return line;
+  }
+
+  while (p < line.length && isDigit(line[p])) {
+    p += 1;
+  }
+
+  while (p < line.length && line[p] === ".") {
+    let q = p + 1;
+    if (q >= line.length || !isDigit(line[q])) {
+      break;
+    }
+    while (q < line.length && isDigit(line[q])) {
+      q += 1;
+    }
+    p = q;
+  }
+
+  if (p < line.length && line[p] === "。") {
+    return `${line.slice(0, p)}. ${line.slice(p + 1)}`;
+  }
+
+  return line;
+}
+
+export { rmBlankRule, insIndentRule, coreRule };

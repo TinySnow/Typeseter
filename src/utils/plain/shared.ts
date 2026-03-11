@@ -1,3 +1,10 @@
+/**
+ * 纯文本规则公共工具：
+ * - `mapP`：对非空段原地映射；
+ * - `toParas`：把文本转为段数组（空行记为 null）；
+ * - `fromParas`：段数组还原为文本。
+ */
+
 import { Paras } from "./types";
 
 function mapP(paras: Paras, fn: (s: string) => string): Paras {

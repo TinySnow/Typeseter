@@ -1,6 +1,11 @@
-import { insertSpaceAfterPercentSign as insSpAfterPct } from "../optional";
-import { Paras, Rule } from "./types";
+/**
+ * 纯文本后处理规则：
+ * 仅处理段间空行/自定义分隔符插入。
+ */
 
+import type { Paras, Rule } from "./types";
+
+/** 段间空行/分隔符规则。 */
 const lineGapRule: Rule = {
   id: "insertLineGap",
   apply: (paras, opt) => {
@@ -28,16 +33,4 @@ const lineGapRule: Rule = {
   },
 };
 
-const otherRule: Rule = {
-  id: "fixOthers",
-  apply: (paras, opt) => {
-    if (!opt.fixOthers) {
-      return paras;
-    }
-
-    insSpAfterPct(opt.insertSpaceAfterPercentSign, paras);
-    return paras;
-  },
-};
-
-export { lineGapRule, otherRule };
+export { lineGapRule };

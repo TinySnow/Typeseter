@@ -1,3 +1,9 @@
+/**
+ * UI 渲染与状态同步：
+ * - 渲染设置复选框；
+ * - 同步配置、模式和段落分隔符输入框状态。
+ */
+
 import type { Option } from "../models/option";
 import { findSettingCheckbox, getModeRadios } from "./dom";
 import type { Mode, BoolKey, SettingDef } from "./types";

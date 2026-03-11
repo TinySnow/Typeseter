@@ -1,3 +1,7 @@
+/**
+ * 纯文本排版公开入口。
+ */
+
 import { Option } from "../models/option";
 import { fromPs, runPlain, toPs } from "./flow";
 

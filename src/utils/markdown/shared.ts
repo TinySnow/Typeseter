@@ -1,3 +1,10 @@
+/**
+ * Markdown 排版共享工具：
+ * - 维护保护状态（围栏代码块、HTML 注释）；
+ * - 清理/包裹 KEEP 标记；
+ * - 在 Markdown 模式下禁用不适合的纯文本规则。
+ */
+
 import type { Option } from "../../models/option";
 
 type FenceState = {
@@ -35,6 +42,7 @@ function stripKeep(text: string): string {
   return text.replace(/\[\[KEEP:[^\]]+\]\]/g, "").replace(/\[\[\/KEEP\]\]/g, "");
 }
 
+/** Markdown 模式禁用空行删除/段首缩进/段间距，避免破坏结构。 */
 function safeMdOpt(opt: Option): Option {
   return {
     ...opt,
@@ -52,14 +60,5 @@ function keepWrap(text: string, reason: string, preview: boolean): string {
   return `[[KEEP:${reason}]]${text}[[/KEEP]]`;
 }
 
-export {
-  initGuard,
-  stripKeep,
-  safeMdOpt,
-  keepWrap,
-  initGuard as newGuardState,
-  stripKeep as stripKeepMarks,
-  safeMdOpt as mdSafeOpt,
-  keepWrap as wrapKeep,
-};
-export type { GuardState, GuardReason, GuardReason as ProtectedLineReason };
+export { initGuard, stripKeep, safeMdOpt, keepWrap };
+export type { GuardState, GuardReason };

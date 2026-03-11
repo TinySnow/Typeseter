@@ -1,3 +1,9 @@
+/**
+ * 本地存储层：
+ * - 持久化排版配置、当前模式、Markdown 预览开关；
+ * - 在 localStorage 不可用时静默降级。
+ */
+
 import { defaultPTS } from "../models/default-pure-setting";
 import type { Option } from "../models/option";
 import type { Mode } from "./types";
@@ -55,7 +61,7 @@ function setItem(key: string, value: string) {
   try {
     window.localStorage.setItem(key, value);
   } catch {
-    // Ignore storage failures (private mode / file protocol restrictions).
+    // 忽略持久化失败（隐私模式或 file 协议限制）。
   }
 }
 

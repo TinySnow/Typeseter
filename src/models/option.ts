@@ -1,3 +1,7 @@
+/**
+ * 排版配置结构定义。
+ */
+
 interface Option {
   insertIndent: boolean;
 

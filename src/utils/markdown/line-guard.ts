@@ -1,3 +1,9 @@
+/**
+ * Markdown 按行保护判定器：
+ * - 识别 fenced code、HTML 注释、表格分隔线；
+ * - 返回保护原因供预览模式插入 KEEP 标记。
+ */
+
 import type { GuardState, GuardReason } from "./shared";
 
 function lineGuard(line: string, state: GuardState): GuardReason | null {
@@ -70,4 +76,4 @@ function isTableSep(line: string): boolean {
   return /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?$/.test(trimmed);
 }
 
-export { lineGuard, lineGuard as detectLineGuardReason };
+export { lineGuard };

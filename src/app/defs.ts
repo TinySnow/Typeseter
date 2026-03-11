@@ -1,4 +1,10 @@
-﻿import type { BoolKey, SettingDef } from "./types";
+/**
+ * 设置项定义：
+ * - 声明每个开关对应的 UI 文案与所属分组；
+ * - 定义 Markdown 模式下需要禁用的纯文本规则。
+ */
+
+import type { BoolKey, SettingDef } from "./types";
 
 const defs: SettingDef[] = [
   { key: "deleteBlankLines", label: "删除原始空行", containerId: "common-settings" },
@@ -54,4 +60,3 @@ const defs: SettingDef[] = [
 const mdOffKeys: ReadonlyArray<BoolKey> = ["deleteBlankLines", "insertIndent"];
 
 export { defs, mdOffKeys };
-

@@ -1,19 +1,26 @@
-import { Option } from "../models/option";
-import { lineGapRule, otherRule } from "./plain/other-rules";
+/**
+ * 纯文本排版流程入口：
+ * - 维护规则执行顺序；
+ * - 暴露段落数组与字符串之间的转换函数。
+ */
+
+import type { Option } from "../models/option";
+import { lineGapRule } from "./plain/other-rules";
 import { punctRule } from "./plain/punct-rule";
 import { fromParas as fromPs, toParas as toPs } from "./plain/shared";
-import { insCnEnSpRule, insIndentRule, rmBlankRule, rmCnPuncSpRule, rmCnSpRule } from "./plain/space-rules";
-import { Paras, Rule } from "./plain/types";
+import { coreRule, insIndentRule, rmBlankRule } from "./plain/space-rules";
+import type { Paras, Rule } from "./plain/types";
 
+/**
+ * 纯文本排版规则总线。
+ * 执行顺序即语义顺序，调整顺序会直接改变排版结果。
+ */
 const rules: ReadonlyArray<Rule> = [
   rmBlankRule,
-  rmCnPuncSpRule,
-  rmCnSpRule,
   insIndentRule,
+  coreRule,
   punctRule,
-  insCnEnSpRule,
   lineGapRule,
-  otherRule,
 ];
 
 function runPlain(paras: Paras, opt: Option): Paras {
@@ -24,13 +31,4 @@ function runPlain(paras: Paras, opt: Option): Paras {
   return curr;
 }
 
-export {
-  runPlain,
-  toPs,
-  fromPs,
-  rules,
-  runPlain as applyPlainTextRules,
-  toPs as toParagraphs,
-  fromPs as fromParagraphs,
-  rules as PLAIN_TEXT_RULES,
-};
+export { runPlain, toPs, fromPs };

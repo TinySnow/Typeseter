@@ -1,3 +1,10 @@
+/**
+ * 浏览器入口：
+ * - 初始化 DOM 引用与本地配置；
+ * - 绑定 UI 事件；
+ * - 在纯文本/Markdown 两种模式间调度排版实现。
+ */
+
 import "./style.css";
 import { defaultPTS } from "./models/default-pure-setting";
 import { defs, mdOffKeys } from "./app/defs";

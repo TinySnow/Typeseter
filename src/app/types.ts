@@ -1,3 +1,7 @@
+/**
+ * 前端 UI 层类型定义。
+ */
+
 import type { Option } from "../models/option";
 
 type BoolKey = {

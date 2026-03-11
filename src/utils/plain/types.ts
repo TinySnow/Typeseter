@@ -1,3 +1,7 @@
+/**
+ * 纯文本规则类型定义。
+ */
+
 import { Option } from "../../models/option";
 
 type Paras = (string | null | undefined)[];
