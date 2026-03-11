@@ -13,6 +13,13 @@
 - 原生 DOM
 - 正则驱动排版规则
 
+## 目录结构
+
+- `src/main.ts`：前端入口（仅启动）
+- `src/core`：平台无关的排版核心逻辑（可复用到 Web / Bot / CLI）
+- `src/web`：浏览器 UI 与本地存储逻辑
+- `src/bin`：可执行文件侧的适配入口（与 Web 解耦）`r`n- `src/bot`：Telegram 对接接口层（不绑定 grammy，便于单独演进）
+
 ## 本地开发
 
 仓库已内置 npm 镜像（`.npmrc`）：`https://registry.npmmirror.com/`。

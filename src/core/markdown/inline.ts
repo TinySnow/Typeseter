@@ -5,7 +5,7 @@
  * - 剩余文本片段交给纯文本排版核心处理。
  */
 
-import type { Option } from "../../models/option";
+import type { Option } from "../models/option";
 import { typeset } from "../typeset";
 import { keepWrap } from "./shared";
 

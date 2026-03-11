@@ -5,7 +5,7 @@
  * - 可选输出 KEEP 保护标记用于可视化预览。
  */
 
-import type { Option } from "../models/option";
+import type { Option } from "./models/option";
 import { lineGuard } from "./markdown/line-guard";
 import { fmtMdLine } from "./markdown/inline";
 import { initGuard, safeMdOpt, stripKeep, keepWrap } from "./markdown/shared";

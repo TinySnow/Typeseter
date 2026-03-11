@@ -22,27 +22,27 @@ const tmpDir = path.join(root, ".tmp-reg-cjs");
 const update = process.argv.includes("--update");
 
 const compileTargets = [
-  "src/models/option.ts",
-  "src/models/default-pure-setting.ts",
-  "src/utils/chars.ts",
-  "src/utils/flow.ts",
-  "src/utils/typeset.ts",
-  "src/utils/punctuation.ts",
-  "src/utils/regex-support.ts",
-  "src/utils/markdown-typeset.ts",
-  "src/utils/plain/types.ts",
-  "src/utils/plain/shared.ts",
-  "src/utils/plain/space-rules.ts",
-  "src/utils/plain/punct-rule.ts",
-  "src/utils/plain/other-rules.ts",
-  "src/utils/punct/types.ts",
-  "src/utils/punct/shared.ts",
-  "src/utils/punct/latin.ts",
-  "src/utils/punct/misc.ts",
-  "src/utils/punct/quote.ts",
-  "src/utils/markdown/shared.ts",
-  "src/utils/markdown/line-guard.ts",
-  "src/utils/markdown/inline.ts",
+  "src/core/models/option.ts",
+  "src/core/models/default-pure-setting.ts",
+  "src/core/chars.ts",
+  "src/core/flow.ts",
+  "src/core/typeset.ts",
+  "src/core/punctuation.ts",
+  "src/core/regex-support.ts",
+  "src/core/markdown-typeset.ts",
+  "src/core/plain/types.ts",
+  "src/core/plain/shared.ts",
+  "src/core/plain/space-rules.ts",
+  "src/core/plain/punct-rule.ts",
+  "src/core/plain/other-rules.ts",
+  "src/core/punct/types.ts",
+  "src/core/punct/shared.ts",
+  "src/core/punct/latin.ts",
+  "src/core/punct/misc.ts",
+  "src/core/punct/quote.ts",
+  "src/core/markdown/shared.ts",
+  "src/core/markdown/line-guard.ts",
+  "src/core/markdown/inline.ts",
 ];
 
 const fixtures = [
@@ -149,8 +149,8 @@ function buildTempModules() {
 /** 从临时 CJS 目录加载运行所需模块。 */
 function loadModules() {
   const req = createRequire(path.join(tmpDir, "_entry.cjs"));
-  const { typeset } = req(path.join(tmpDir, "utils", "typeset.js"));
-  const { typesetMarkdown } = req(path.join(tmpDir, "utils", "markdown-typeset.js"));
+  const { typeset } = req(path.join(tmpDir, "typeset.js"));
+  const { typesetMarkdown } = req(path.join(tmpDir, "markdown-typeset.js"));
   const { defaultPTS } = req(path.join(tmpDir, "models", "default-pure-setting.js"));
   return { typeset, typesetMarkdown, defaultPTS };
 }

@@ -4,8 +4,8 @@
  * - 在 localStorage 不可用时静默降级。
  */
 
-import { defaultPTS } from "../models/default-pure-setting";
-import type { Option } from "../models/option";
+import { defaultPTS } from "../../core/models/default-pure-setting";
+import type { Option } from "../../core/models/option";
 import type { Mode } from "./types";
 
 const CFG_KEY = "pure-text-config";

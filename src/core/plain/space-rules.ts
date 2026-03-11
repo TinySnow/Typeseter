@@ -1,4 +1,4 @@
-import type { Option } from "../../models/option";
+import type { Option } from "../models/option";
 import { isAsciiWord, isCnPunc, isDigit, isHan, isWs, nextNonWs, skipWs } from "../chars";
 import { mapP } from "./shared";
 import type { Rule } from "./types";

@@ -5,7 +5,7 @@
  * - 在 Markdown 模式下禁用不适合的纯文本规则。
  */
 
-import type { Option } from "../../models/option";
+import type { Option } from "../models/option";
 
 type FenceState = {
   inFence: boolean;

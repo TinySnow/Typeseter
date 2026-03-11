@@ -4,7 +4,7 @@
  * - 同步配置、模式和段落分隔符输入框状态。
  */
 
-import type { Option } from "../models/option";
+import type { Option } from "../../core/models/option";
 import { findSettingCheckbox, getModeRadios } from "./dom";
 import type { Mode, BoolKey, SettingDef } from "./types";
 import type { Refs } from "./dom";

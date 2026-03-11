@@ -4,7 +4,7 @@
  * - 暴露段落数组与字符串之间的转换函数。
  */
 
-import type { Option } from "../models/option";
+import type { Option } from "./models/option";
 import { lineGapRule } from "./plain/other-rules";
 import { punctRule } from "./plain/punct-rule";
 import { fromParas as fromPs, toParas as toPs } from "./plain/shared";
