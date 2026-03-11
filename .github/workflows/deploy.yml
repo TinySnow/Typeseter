@@ -1,4 +1,4 @@
-name: Github Pages for typeseter
+name: GitHub Pages for Typeseter
 
 on:
   push:
@@ -10,31 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write  # To create a PR from that branch
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: install node
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
+          cache: npm
 
-      - name: install pnpm
-        run: npm install -g pnpm
+      - name: Use npm mirror
+        run: npm config set registry https://registry.npmmirror.com/
 
-      - name: install umi and antd
-        run: pnpm i @umijs/plugins -D antd @ant-design/pro-layout -S
+      - name: Install dependencies
+        run: npm ci
 
-      - name: build
-        run: |
-          pnpm install
-          pnpm run build
-      
-      - name: deploy
-        if: success()
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

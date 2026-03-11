@@ -1,23 +1,29 @@
-/**
- * 百分号后添加空格的函数。
- * 注意：此函数仅为了美观。
- *      因为 % 是一个全角字符，可以不用其后添加空格。
- *      但此种形式不太美观：上涨了 5%的利润
- *      所以改为下面的形式：上涨了 5% 的利润
- * @param bool 是否在百分号后添加空格
- * @param origin 原始文本数组
- * @returns 在百分号后添加空格后的文本数组
- */
+import { supportsAdvancedRegex, HAN_CLASS } from "./regex-support";
+
+const useAdvancedRegex = supportsAdvancedRegex();
+const RE_SPACE_AFTER_PERCENT_ADV = useAdvancedRegex
+  ? new RegExp("(?<=%)(?=\\p{Script=Han})", "gu")
+  : null;
+const RE_SPACE_AFTER_PERCENT_FB = new RegExp(`%(${HAN_CLASS})`, "g");
+
 function insertSpaceAfterPercentSign(
-  bool: Boolean,
+  enabled: boolean,
   origin: (string | null | undefined)[]
 ): (string | null | undefined)[] {
-  if (!bool) return origin;
-  else {
-    return origin.map((s: string | null | undefined) =>
-      s?.replaceAll(/(?<=%)(?=\p{Script=Han})/gu, " ")
-    );
+  if (!enabled) {
+    return origin;
   }
+
+  for (let i = 0; i < origin.length; i += 1) {
+    const s = origin[i];
+    if (s != null) {
+      origin[i] = RE_SPACE_AFTER_PERCENT_ADV
+        ? s.replaceAll(RE_SPACE_AFTER_PERCENT_ADV, " ")
+        : s.replace(RE_SPACE_AFTER_PERCENT_FB, "% $1");
+    }
+  }
+
+  return origin;
 }
 
 export { insertSpaceAfterPercentSign };

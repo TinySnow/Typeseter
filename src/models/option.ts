@@ -1,34 +1,34 @@
 interface Option {
-  insertIndent: Boolean;
+  insertIndent: boolean;
 
   lineGap: number;
   customedLineBreaker: string;
 
-  deleteBlankLines: Boolean;
+  deleteBlankLines: boolean;
 
-  deleteSpaceBetweenChineseCharactersAndChinesePunctuations: Boolean;
+  deleteSpaceBetweenChineseCharactersAndChinesePunctuations: boolean;
 
-  deleteSpaceInChineseCharacter: Boolean;
+  deleteSpaceInChineseCharacter: boolean;
 
-  insertSpaceInChineseAndEnglish: Boolean;
+  insertSpaceInChineseAndEnglish: boolean;
 
-  fixPunctuation: Boolean;
-  comma: Boolean;
-  dots2ellipsis: Boolean;
-  dot: Boolean;
-  colon: Boolean;
-  bang: Boolean;
-  questionMark: Boolean;
-  semicolon: Boolean;
-  guillemet: Boolean;
-  chineseDash: Boolean;
-  chineseCommasFold: Boolean;
-  chineseDotsFold: Boolean;
-  chineseEllipsisesFold: Boolean;
-  englishBrackets2ChineseBrackets: Boolean;
+  fixPunctuation: boolean;
+  comma: boolean;
+  dots2ellipsis: boolean;
+  dot: boolean;
+  colon: boolean;
+  bang: boolean;
+  questionMark: boolean;
+  semicolon: boolean;
+  guillemet: boolean;
+  chineseDash: boolean;
+  chineseCommasFold: boolean;
+  chineseDotsFold: boolean;
+  chineseEllipsisesFold: boolean;
+  englishBrackets2ChineseBrackets: boolean;
 
-  fixOthers: Boolean;
-  insertSpaceAfterPercentSign: Boolean;
+  fixOthers: boolean;
+  insertSpaceAfterPercentSign: boolean;
 }
 
 export { Option };

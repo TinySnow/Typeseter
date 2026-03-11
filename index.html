@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>排版器</title>
+  </head>
+  <body>
+    <main class="app">
+      <header class="top">
+        <h1>排版器</h1>
+      </header>
+
+      <section class="panel">
+        <div class="mode-row">
+          <h2 class="panel-title">模式</h2>
+          <div class="mode-switch" id="mode-switch">
+            <label>
+              <input type="radio" name="typeset-mode" value="plain" checked />
+              纯文本模式
+            </label>
+            <label>
+              <input type="radio" name="typeset-mode" value="markdown" />
+              Markdown 模式
+            </label>
+            <label id="preview-toggle" class="preview-toggle" style="display: none">
+              <input id="markdown-protection-preview" type="checkbox" />
+              Markdown 保护范围预览（会插入 KEEP 标记）
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <details open>
+          <summary>设置</summary>
+          <div class="settings">
+            <div>
+              <h2>常规修正</h2>
+              <div id="common-settings" class="check-grid"></div>
+            </div>
+
+            <div>
+              <h2>段落间距</h2>
+              <div class="line-gap-row">
+                <label for="line-gap-select">段落间空行数</label>
+                <select id="line-gap-select">
+                  <option value="0">不空行</option>
+                  <option value="1">空一行</option>
+                  <option value="2">空两行</option>
+                  <option value="-1">自定义分隔符</option>
+                </select>
+                <input
+                  id="line-breaker-input"
+                  type="text"
+                  placeholder="自定义段落分隔符"
+                />
+              </div>
+            </div>
+
+            <div>
+              <h2>标点修正（英转中）</h2>
+              <div id="punctuation-settings" class="check-grid"></div>
+            </div>
+
+            <div>
+              <h2>其他修正</h2>
+              <div id="other-settings" class="check-grid"></div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">文本框</h2>
+          <div class="toolbar">
+            <button id="typeset-btn" type="button">立即排版</button>
+            <button id="reset-btn" type="button" class="secondary">重置设置</button>
+            <button id="copy-btn" type="button" class="secondary">复制结果</button>
+          </div>
+        </div>
+        <textarea
+          id="editor"
+          rows="24"
+          placeholder="请输入需要排版的中文文本"
+        ></textarea>
+      </section>
+
+      <footer class="footer">
+        <a href="https://github.com/TinySnow/Typeseter" target="_blank" rel="noreferrer">GitHub</a>
+      </footer>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
