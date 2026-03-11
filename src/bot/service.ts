@@ -8,17 +8,34 @@ import { defaultPTS } from "../core/models/default-pure-setting";
 import type { Option } from "../core/models/option";
 import { typeset } from "../core/typeset";
 import { typesetMarkdown } from "../core/markdown-typeset";
-import type { BotMode, TelegramTypesetReq, TelegramTypesetRes } from "./types";
+import { normalizeChunkLen, splitTelegramText } from "./text";
+import type {
+  BotMode,
+  TelegramHandlerOpt,
+  TelegramSendFn,
+  TelegramTypesetReq,
+  TelegramTypesetRes,
+} from "./types";
 
 function typesetForTelegram(req: TelegramTypesetReq): TelegramTypesetRes {
   const mode = normalizeMode(req.mode);
+  const input = req.text.trim();
+
+  if (!input) {
+    return {
+      ok: false,
+      error: "输入为空",
+      usedMode: mode,
+      meta: req.meta,
+    };
+  }
 
   try {
     const opt = normalizeOpt(req.opt);
     const output =
       mode === "markdown"
-        ? typesetMarkdown(req.text, opt, req.preview === true)
-        : typeset(req.text, opt);
+        ? typesetMarkdown(input, opt, req.preview === true)
+        : typeset(input, opt);
 
     return {
       ok: true,
@@ -41,13 +58,19 @@ function typesetForTelegram(req: TelegramTypesetReq): TelegramTypesetRes {
  * 预留给 grammy/telegraf 等框架的薄适配器。
  * 调用方只需要提供“如何发送消息”，这里统一封装排版与错误文案。
  */
-function createTelegramHandler(
-  send: (meta: TelegramTypesetReq["meta"], text: string) => Promise<unknown> | unknown
-) {
+function createTelegramHandler(send: TelegramSendFn, opt?: TelegramHandlerOpt) {
+  const splitLongText = opt?.splitLongText !== false;
+  const chunkLen = normalizeChunkLen(opt?.maxChunkLen);
+
   return async (req: TelegramTypesetReq): Promise<TelegramTypesetRes> => {
     const res = typesetForTelegram(req);
     const text = res.ok ? res.output : `排版失败：${res.error}`;
-    await send(req.meta, text);
+    const chunks = splitLongText ? splitTelegramText(text, chunkLen) : [text];
+
+    for (const chunk of chunks) {
+      await send(req.meta, chunk);
+    }
+
     return res;
   };
 }

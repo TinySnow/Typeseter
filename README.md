@@ -1,4 +1,4 @@
-# Typeseter
+﻿# Typeseter
 
 一个面向中文写作的小型排版工具，当前为纯静态版本（无 Umi、无 Ant、无 React）。
 
@@ -18,7 +18,14 @@
 - `src/main.ts`：前端入口（仅启动）
 - `src/core`：平台无关的排版核心逻辑（可复用到 Web / Bot / CLI）
 - `src/web`：浏览器 UI 与本地存储逻辑
-- `src/bin`：可执行文件侧的适配入口（与 Web 解耦）`r`n- `src/bot`：Telegram 对接接口层（不绑定 grammy，便于单独演进）
+- `src/bin`：可执行文件侧的适配入口（与 Web 解耦）
+- `src/bot`：Telegram 对接接口层（不绑定 grammy，便于单独演进）
+
+## Telegram 对接建议
+
+- 业务入口用 `src/bot/service.ts` 的 `typesetForTelegram` 或 `createTelegramHandler`。
+- 会话状态建议用 `src/bot/store.ts` 的 LRU+TTL 存储，避免 chat 状态无限增长。
+- 长消息建议启用 `src/bot/text.ts` 的自动分片，规避 Telegram 4096 字符限制。
 
 ## 本地开发
 

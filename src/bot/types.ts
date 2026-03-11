@@ -41,6 +41,19 @@ type TelegramTypesetErr = {
 
 type TelegramTypesetRes = TelegramTypesetOk | TelegramTypesetErr;
 
+/** Telegram 文本发送函数签名。 */
+type TelegramSendFn = (
+  meta: TelegramMeta | undefined,
+  text: string
+) => Promise<unknown> | unknown;
+
+type TelegramHandlerOpt = {
+  /** 长文本是否自动拆分发送。默认 true。 */
+  splitLongText?: boolean;
+  /** 单条消息最大长度（建议小于 4096，默认 3900）。 */
+  maxChunkLen?: number;
+};
+
 export type {
   BotMode,
   TelegramMeta,
@@ -48,4 +61,6 @@ export type {
   TelegramTypesetRes,
   TelegramTypesetOk,
   TelegramTypesetErr,
+  TelegramSendFn,
+  TelegramHandlerOpt,
 };
