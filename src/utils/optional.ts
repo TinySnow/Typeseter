@@ -1,11 +1,9 @@
-import { supportsAdvancedRegex, HAN_CLASS } from "./regex-support";
+import { isHan } from "./chars";
 
-const useAdvancedRegex = supportsAdvancedRegex();
-const RE_SPACE_AFTER_PERCENT_ADV = useAdvancedRegex
-  ? new RegExp("(?<=%)(?=\\p{Script=Han})", "gu")
-  : null;
-const RE_SPACE_AFTER_PERCENT_FB = new RegExp(`%(${HAN_CLASS})`, "g");
-
+/**
+ * 可选规则：在百分号后补一个空格。
+ * 行为保持与历史版本一致：仅当下一个字符是汉字时补空格。
+ */
 function insertSpaceAfterPercentSign(
   enabled: boolean,
   origin: (string | null | undefined)[]
@@ -17,13 +15,38 @@ function insertSpaceAfterPercentSign(
   for (let i = 0; i < origin.length; i += 1) {
     const s = origin[i];
     if (s != null) {
-      origin[i] = RE_SPACE_AFTER_PERCENT_ADV
-        ? s.replaceAll(RE_SPACE_AFTER_PERCENT_ADV, " ")
-        : s.replace(RE_SPACE_AFTER_PERCENT_FB, "% $1");
+      origin[i] = insertSpaceAfterPctInLine(s);
     }
   }
 
   return origin;
+}
+
+/**
+ * 单行处理：扫描到 "%" 时，若下一个字符是汉字则插入半角空格。
+ * 例如："上涨5%利润" -> "上涨5% 利润"
+ */
+function insertSpaceAfterPctInLine(line: string): string {
+  if (!line.includes("%")) {
+    return line;
+  }
+
+  let out = "";
+  for (let i = 0; i < line.length; i += 1) {
+    const ch = line[i];
+    out += ch;
+
+    if (ch !== "%") {
+      continue;
+    }
+
+    const next = i + 1 < line.length ? line[i + 1] : null;
+    if (isHan(next)) {
+      out += " ";
+    }
+  }
+
+  return out;
 }
 
 export { insertSpaceAfterPercentSign };
