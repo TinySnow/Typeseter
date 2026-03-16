@@ -34,6 +34,7 @@ interface Option {
 
   mdIndentParagraphs: boolean;
   mdStyleSpacing: boolean;
+  mdAutoBlankLines: boolean;
 
   fixOthers: boolean;
   insertSpaceAfterPercentSign: boolean;

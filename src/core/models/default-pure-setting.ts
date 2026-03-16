@@ -33,6 +33,7 @@ const defaultPTS: Option = {
 
   mdIndentParagraphs: true,
   mdStyleSpacing: true,
+  mdAutoBlankLines: true,
 
   fixOthers: true,
   insertSpaceAfterPercentSign: true,

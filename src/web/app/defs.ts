@@ -63,6 +63,12 @@ const defs: SettingDef[] = [
     mdOnly: true,
   },
   {
+    key: "mdAutoBlankLines",
+    label: "Markdown 段落自动空行",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
     key: "insertSpaceAfterPercentSign",
     label: "百分号后加空格",
     containerId: "other-settings",
