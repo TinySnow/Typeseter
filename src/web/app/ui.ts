@@ -1,4 +1,4 @@
-/**
+﻿/**
  * UI 渲染与状态同步：
  * - 渲染设置复选框；
  * - 同步配置、模式和段落分隔符输入框状态。
@@ -17,6 +17,11 @@ function renderCks(defs: ReadonlyArray<SettingDef>, cfg: Option, onCheck: (key: 
     ck.type = "checkbox";
     ck.dataset.key = def.key;
     ck.checked = cfg[def.key];
+
+    if (def.mdOnly) {
+      label.dataset.mdOnly = "1";
+      label.style.display = "none";
+    }
 
     ck.addEventListener("change", () => {
       onCheck(def.key, ck.checked);
@@ -57,6 +62,8 @@ function syncModeUi(mode: Mode, refs: Refs, mdOffKeys: ReadonlyArray<BoolKey>) {
     }
   }
 
+  syncMdOnly(isMd);
+
   refs.previewToggle.style.display = isMd ? "inline-flex" : "none";
 
   refs.lineGapSel.disabled = isMd;
@@ -66,6 +73,17 @@ function syncModeUi(mode: Mode, refs: Refs, mdOffKeys: ReadonlyArray<BoolKey>) {
   }
 
   syncBrkInput(refs);
+}
+
+function syncMdOnly(enabled: boolean) {
+  const nodes = document.querySelectorAll<HTMLElement>("[data-md-only=\"1\"]");
+  for (const node of nodes) {
+    node.style.display = enabled ? "inline-flex" : "none";
+    const ck = node.querySelector<HTMLInputElement>("input[type=\"checkbox\"]");
+    if (ck) {
+      ck.disabled = !enabled;
+    }
+  }
 }
 
 function syncBrkInput(refs: Refs) {

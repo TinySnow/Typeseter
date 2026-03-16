@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 排版配置结构定义。
  */
 
@@ -31,6 +31,9 @@ interface Option {
   chineseDotsFold: boolean;
   chineseEllipsisesFold: boolean;
   englishBrackets2ChineseBrackets: boolean;
+
+  mdIndentParagraphs: boolean;
+  mdStyleSpacing: boolean;
 
   fixOthers: boolean;
   insertSpaceAfterPercentSign: boolean;

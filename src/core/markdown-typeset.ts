@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Markdown 排版入口：
  * - 逐行判定是否需要保护；
  * - 普通文本行走行内排版；
@@ -25,10 +25,43 @@ function typesetMarkdown(text: string, opt: Option, preview = false): string {
       continue;
     }
 
-    lines[i] = fmtMdLine(line, mdOpt, preview);
+    const formatted = fmtMdLine(line, mdOpt, preview);
+    lines[i] = applyMdIndent(formatted, line, opt);
   }
 
   return lines.join("\n");
+}
+
+function applyMdIndent(formatted: string, raw: string, opt: Option): string {
+  if (!opt.mdIndentParagraphs) {
+    return formatted;
+  }
+
+  if (isBlankLine(raw)) {
+    return formatted;
+  }
+
+  if (isAtxHeading(raw)) {
+    return formatted;
+  }
+
+  if (hasLeadingIndent(formatted)) {
+    return formatted;
+  }
+
+  return `　　${formatted}`;
+}
+
+function isBlankLine(line: string): boolean {
+  return line.trim().length === 0;
+}
+
+function isAtxHeading(line: string): boolean {
+  return /^\s{0,3}#{1,6}(?:\s|$)/.test(line);
+}
+
+function hasLeadingIndent(line: string): boolean {
+  return line.startsWith("　　");
 }
 
 export { typesetMarkdown };

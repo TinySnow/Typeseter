@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 默认配置：用于首次加载与“重置设置”。
  */
 
@@ -30,6 +30,9 @@ const defaultPTS: Option = {
   chineseDotsFold: true,
   chineseEllipsisesFold: true,
   englishBrackets2ChineseBrackets: true,
+
+  mdIndentParagraphs: true,
+  mdStyleSpacing: true,
 
   fixOthers: true,
   insertSpaceAfterPercentSign: true,

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 设置项定义：
  * - 声明每个开关对应的 UI 文案与所属分组；
  * - 定义 Markdown 模式下需要禁用的纯文本规则。
@@ -50,6 +50,18 @@ const defs: SettingDef[] = [
     containerId: "punctuation-settings",
   },
   { key: "dots2ellipsis", label: "连续句点变为省略号", containerId: "punctuation-settings" },
+  {
+    key: "mdIndentParagraphs",
+    label: "Markdown 段首缩进（跳过 H1-H6）",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdStyleSpacing",
+    label: "Markdown 样式两侧加空格（加粗/斜体/下划线）",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
   {
     key: "insertSpaceAfterPercentSign",
     label: "百分号后加空格",

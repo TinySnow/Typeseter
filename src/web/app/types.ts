@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 前端 UI 层类型定义。
  */
 
@@ -14,6 +14,7 @@ type SettingDef = {
   key: BoolKey;
   label: string;
   containerId: string;
+  mdOnly?: boolean;
 };
 
 export type { BoolKey, Mode, SettingDef };

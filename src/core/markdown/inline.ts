@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Markdown 行内排版器：
  * - 先拆分行内代码范围（`...`），代码内容不改；
  * - 再识别链接/图片/URL token，避免修改 URL 本体；
@@ -6,6 +6,7 @@
  */
 
 import type { Option } from "../models/option";
+import { isCnPunc, isHan, isWs } from "../chars";
 import { typeset } from "../typeset";
 import { keepWrap } from "./shared";
 
@@ -152,8 +153,145 @@ function fmtFrag(frag: string, opt: Option): string {
     return frag;
   }
 
-  const core = frag.slice(coreStart, coreEnd);
+  let core = frag.slice(coreStart, coreEnd);
+  if (opt.mdStyleSpacing) {
+    core = applyMdStyleSpacing(core);
+  }
+
   return `${lead}${typeset(core, opt)}${tail}`;
+}
+
+function applyMdStyleSpacing(text: string): string {
+  let out = text;
+  out = addBoldSpacing(out);
+  out = addItalicSpacing(out);
+  out = addUnderlineSpacing(out);
+  return out;
+}
+
+function addBoldSpacing(text: string): string {
+  return addDelimitedSpacing(text, "**", "**");
+}
+
+function addItalicSpacing(text: string): string {
+  return addItalicDelimitedSpacing(text);
+}
+
+function addUnderlineSpacing(text: string): string {
+  return addDelimitedSpacing(text, "<u>", "</u>");
+}
+
+function addDelimitedSpacing(text: string, open: string, close: string): string {
+  let out = "";
+  let cur = 0;
+
+  while (cur < text.length) {
+    const openIdx = text.indexOf(open, cur);
+    if (openIdx < 0) {
+      out += text.slice(cur);
+      break;
+    }
+
+    const closeIdx = text.indexOf(close, openIdx + open.length);
+    if (closeIdx < 0) {
+      out += text.slice(cur);
+      break;
+    }
+
+    out += text.slice(cur, openIdx);
+
+    const prev = openIdx > 0 ? text[openIdx - 1] : null;
+    const next = closeIdx + close.length < text.length ? text[closeIdx + close.length] : null;
+
+    if (needsLeftSpace(prev, out)) {
+      out += " ";
+    }
+
+    out += text.slice(openIdx, closeIdx + close.length);
+
+    if (needsRightSpace(next)) {
+      out += " ";
+    }
+
+    cur = closeIdx + close.length;
+  }
+
+  return out;
+}
+
+function addItalicDelimitedSpacing(text: string): string {
+  let out = "";
+  let cur = 0;
+
+  while (cur < text.length) {
+    const openIdx = findSingleStar(text, cur);
+    if (openIdx < 0) {
+      out += text.slice(cur);
+      break;
+    }
+
+    const closeIdx = findSingleStar(text, openIdx + 1);
+    if (closeIdx < 0) {
+      out += text.slice(cur);
+      break;
+    }
+
+    out += text.slice(cur, openIdx);
+
+    const prev = openIdx > 0 ? text[openIdx - 1] : null;
+    const next = closeIdx + 1 < text.length ? text[closeIdx + 1] : null;
+
+    if (needsLeftSpace(prev, out)) {
+      out += " ";
+    }
+
+    out += text.slice(openIdx, closeIdx + 1);
+
+    if (needsRightSpace(next)) {
+      out += " ";
+    }
+
+    cur = closeIdx + 1;
+  }
+
+  return out;
+}
+
+function findSingleStar(text: string, from: number): number {
+  for (let i = from; i < text.length; i += 1) {
+    if (text[i] !== "*") {
+      continue;
+    }
+
+    if (text[i - 1] === "*" || text[i + 1] === "*") {
+      continue;
+    }
+
+    return i;
+  }
+
+  return -1;
+}
+
+function needsLeftSpace(prev: string | null, out: string): boolean {
+  if (!prev || !isCjkLike(prev)) {
+    return false;
+  }
+
+  const last = out[out.length - 1] ?? "";
+  return !isWs(last);
+}
+
+function needsRightSpace(next: string | null): boolean {
+  if (!next || !isCjkLike(next)) {
+    return false;
+  }
+
+  return !isWs(next);
+}
+
+function isCjkLike(ch: string | null): boolean {
+  return isHan(ch) || isCnPunc(ch);
 }
 
 export { fmtMdLine };

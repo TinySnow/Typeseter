@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Markdown 排版共享工具：
  * - 维护保护状态（围栏代码块、HTML 注释）；
  * - 清理/包裹 KEEP 标记；
@@ -42,7 +42,7 @@ function stripKeep(text: string): string {
   return text.replace(/\[\[KEEP:[^\]]+\]\]/g, "").replace(/\[\[\/KEEP\]\]/g, "");
 }
 
-/** Markdown 模式禁用空行删除/段首缩进/段间距，避免破坏结构。 */
+/** Markdown 模式禁用空行删除/段间距/行内排版层面的段首缩进，避免破坏结构。 */
 function safeMdOpt(opt: Option): Option {
   return {
     ...opt,
@@ -62,3 +62,4 @@ function keepWrap(text: string, reason: string, preview: boolean): string {
 
 export { initGuard, stripKeep, safeMdOpt, keepWrap };
 export type { GuardState, GuardReason };
+
