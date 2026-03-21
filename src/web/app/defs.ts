@@ -51,6 +51,11 @@ const defs: SettingDef[] = [
   },
   { key: "dots2ellipsis", label: "连续句点变为省略号", containerId: "punctuation-settings" },
   {
+    key: "insertSpaceAfterPercentSign",
+    label: "百分号后加空格",
+    containerId: "other-settings",
+  },
+  {
     key: "mdIndentParagraphs",
     label: "Markdown 段首缩进（跳过 H1-H6）",
     containerId: "other-settings",
@@ -67,11 +72,6 @@ const defs: SettingDef[] = [
     label: "Markdown 段落自动空行",
     containerId: "other-settings",
     mdOnly: true,
-  },
-  {
-    key: "insertSpaceAfterPercentSign",
-    label: "百分号后加空格",
-    containerId: "other-settings",
   },
 ];
 
