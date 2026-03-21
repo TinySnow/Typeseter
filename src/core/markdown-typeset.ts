@@ -61,7 +61,8 @@ function typesetMarkdown(text: string, opt: Option, preview = false): string {
     }
 
     const formatted = fmtMdLine(line, mdOpt, preview);
-    lines[i] = applyMdIndent(formatted, line, lines, i, opt);
+    const trimmed = trimMdParagraphLeadingSpaces(formatted, line, lines, i);
+    lines[i] = applyMdIndent(trimmed, line, lines, i, opt);
   }
 
   let out = lines.join("\n");
@@ -378,6 +379,27 @@ function isLikelyTableLine(line: string, lines: ReadonlyArray<string>, idx: numb
   }
 
   return prev.includes("|") || next.includes("|");
+}
+
+function trimMdParagraphLeadingSpaces(
+  formatted: string,
+  raw: string,
+  lines: ReadonlyArray<string>,
+  idx: number
+): string {
+  if (isBlankLine(raw)) {
+    return formatted;
+  }
+
+  if (isAtxHeadingLine(raw) || isMdStructuralLine(raw, lines, idx) || isIndentedCodeLine(raw)) {
+    return formatted;
+  }
+
+  return formatted.replace(/^[ \t\u3000]+/, "");
+}
+
+function isIndentedCodeLine(line: string): boolean {
+  return /^(?: {4,}|\t+)/.test(line);
 }
 
 /**

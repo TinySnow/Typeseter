@@ -16,6 +16,7 @@
 - 列表English,项
 1. 有序列表English,项
 > 引用English,内容.
+   这是段首有空格English,混排.
 
 <!--
 这个 HTML 注释块内部不应该被排版,
