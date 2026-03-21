@@ -7,6 +7,12 @@
 
 import { Paras } from "./types";
 
+/**
+ * 对非空段原地映射
+ * @param paras 段落数组，元素为 string | null | undefined
+ * @param fn 映射函数，接收字符串参数并返回处理后的字符串
+ * @returns 映射后的段落数组（原地修改）
+ */
 function mapP(paras: Paras, fn: (s: string) => string): Paras {
   for (let i = 0; i < paras.length; i += 1) {
     const s = paras[i];

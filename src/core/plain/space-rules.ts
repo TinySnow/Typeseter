@@ -44,6 +44,20 @@ const coreRule: Rule = {
   apply: (paras, opt) => mapP(paras, (line) => normalizeLine(line, opt)),
 };
 
+/**
+ * 规范化行文本
+ * @param line 要规范化的行
+ * @param opt 排版选项
+ * @returns 规范化后的行
+ * @description 处理逻辑：
+ * 1. 遍历行中的每个字符
+ * 2. 处理空白字符：根据上下文决定是否保留
+ * 3. 处理省略号：将连续的三个或更多点转换为中文省略号
+ * 4. 处理拉丁标点：根据上下文转换为中文标点
+ * 5. 处理百分号：在百分号后添加空格（如果后面是汉字）
+ * 6. 处理中英文边界：在中英文之间添加空格
+ * 7. 恢复段首序号句点
+ */
 function normalizeLine(line: string, opt: Option): string {
   let out = "";
   let prevRawNonWs: string | null = null;
@@ -59,14 +73,14 @@ function normalizeLine(line: string, opt: Option): string {
       }
 
       const next = nextNonWs(line, j);
-      const dropCnCn =
+      const dropCnCn = 
         opt.deleteSpaceInChineseCharacter &&
         prevRawNonWs !== null &&
         next !== null &&
         isHan(prevRawNonWs) &&
         isHan(next);
 
-      const dropCnPunc =
+      const dropCnPunc = 
         opt.deleteSpaceBetweenChineseCharactersAndChinesePunctuations &&
         prevRawNonWs !== null &&
         next !== null &&
@@ -129,7 +143,19 @@ function normalizeLine(line: string, opt: Option): string {
   return out;
 }
 
-/** 在当前位置按上下文尝试做拉丁标点转换。 */
+/**
+ * 在当前位置按上下文尝试做拉丁标点转换
+ * @param line 要处理的行
+ * @param i 当前字符的索引
+ * @param ch 当前字符
+ * @param opt 排版选项
+ * @returns 转换结果，如果不需要转换则返回 null
+ * @description 处理逻辑：
+ * 1. 检查是否启用了标点修复
+ * 2. 尝试将拉丁标点映射到中文标点
+ * 3. 检查上下文是否适合转换（前面至少有一个字符，且前后有汉字）
+ * 4. 如果适合转换，返回转换结果和下一个要处理的索引
+ */
 function fixLatPuncAt(
   line: string,
   i: number,
@@ -161,7 +187,13 @@ function fixLatPuncAt(
   };
 }
 
-/** 根据开关把拉丁标点映射到中文标点。 */
+/**
+ * 根据开关把拉丁标点映射到中文标点
+ * @param ch 拉丁标点字符
+ * @param opt 排版选项
+ * @returns 对应的中文标点，如果不需要转换则返回 null
+ * @description 根据配置的开关，将拉丁标点转换为对应的中文标点
+ */
 function mapLatPunc(ch: string, opt: Option): string | null {
   if (ch === "," && opt.comma) {
     return "，";
@@ -184,7 +216,12 @@ function mapLatPunc(ch: string, opt: Option): string | null {
   return null;
 }
 
-/** 统计从 start 开始连续 '.' 的数量。 */
+/**
+ * 统计从 start 开始连续 '.' 的数量
+ * @param text 要检查的文本
+ * @param start 起始位置
+ * @returns 连续 '.' 的数量
+ */
 function countDotRun(text: string, start: number): number {
   let i = start;
   while (i < text.length && text[i] === ".") {
@@ -193,7 +230,16 @@ function countDotRun(text: string, start: number): number {
   return i - start;
 }
 
-/** 判断是否需要在相邻字符之间插入中英文空格。 */
+/**
+ * 判断是否需要在相邻字符之间插入中英文空格
+ * @param left 左侧字符
+ * @param right 右侧字符
+ * @returns 如果需要插入空格，返回 true；否则返回 false
+ * @description 判断逻辑：
+ * 1. 如果左侧是汉字且右侧是 ASCII 词字符，需要插入空格
+ * 2. 如果左侧是 ASCII 词字符且右侧是汉字，需要插入空格
+ * 3. 其他情况不需要插入空格
+ */
 function shouldInsCnEnSp(left: string, right: string): boolean {
   return (
     (isHan(left) && isAsciiWord(right)) ||
@@ -202,9 +248,14 @@ function shouldInsCnEnSp(left: string, right: string): boolean {
 }
 
 /**
- * 恢复段首序号句点：
- * - 1。 -> 1. 
- * - 1.2.3。 -> 1.2.3. 
+ * 恢复段首序号句点
+ * @param line 要处理的行
+ * @returns 恢复序号句点后的行
+ * @description 处理逻辑：
+ * 1. 跳过行首的空白字符
+ * 2. 检查是否以数字开头
+ * 3. 处理可能的多级编号（如 1.2.3）
+ * 4. 如果编号后是中文句号，将其恢复为英文句点并添加空格
  */
 function recoverListDotPrefix(line: string): string {
   let i = 0;

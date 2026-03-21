@@ -3,8 +3,18 @@ import { mapP } from "./shared";
 import type { Paras } from "./types";
 
 /**
- * 英文括号转中文括号：
- * 仅当一对括号内部包含汉字时进行转换。
+ * 英文括号转中文括号
+ * @param on 是否启用转换
+ * @param paras 段落数组
+ * @returns 转换后的段落数组
+ * @description 处理逻辑：
+ * 1. 如果未启用转换，直接返回原数组
+ * 2. 遍历每个段落，对每个段落执行以下操作：
+ *    - 将段落转换为字符数组
+ *    - 使用栈记录左括号的位置
+ *    - 当遇到右括号时，检查对应左括号内是否包含汉字
+ *    - 如果包含汉字，将括号转换为中文括号
+ *    - 将字符数组重新组合为字符串
  */
 function enBr2CnBr(on: boolean, paras: Paras): Paras {
   if (!on) {

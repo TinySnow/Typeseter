@@ -75,6 +75,18 @@ function applyMarkdownNormalizeRules(text: string, opt: MarkdownNormalizeSwitche
   return out;
 }
 
+/**
+ * 修复 Markdown 结构中的空白行
+ * @param lines 行数组
+ * @param protectedLines 受保护行的标记数组
+ * @param opt 规范化选项
+ * @returns 修复空白行后的行数组
+ * @description 处理逻辑：
+ * 1. 遍历每一行
+ * 2. 在标题、代码块、列表前添加空白行（如果需要）
+ * 3. 添加当前行
+ * 4. 在标题、代码块、列表后添加空白行（如果需要）
+ */
 function fixStructuralBlankLines(
   lines: string[],
   protectedLines: boolean[],
@@ -127,6 +139,12 @@ function fixStructuralBlankLines(
   return out;
 }
 
+/**
+ * 标记受保护的行
+ * @param lines 行数组
+ * @returns 受保护行的标记数组
+ * @description 遍历每一行，使用 lineGuard 函数判断是否需要保护
+ */
 function markProtected(lines: string[]): boolean[] {
   const state = initGuard();
   const out = new Array<boolean>(lines.length);
@@ -139,26 +157,67 @@ function markProtected(lines: string[]): boolean[] {
   return out;
 }
 
+/**
+ * 判断一行是否是空行
+ * @param line 要判断的行
+ * @returns 如果是空行，返回 true；否则返回 false
+ * @description 判断逻辑：去除行首尾空白后长度为 0
+ */
 function isBlankLine(line: string): boolean {
   return line.trim().length === 0;
 }
 
+/**
+ * 判断一行是否是 ATX 标题行
+ * @param line 要判断的行
+ * @returns 如果是 ATX 标题行，返回 true；否则返回 false
+ * @description 使用正则表达式匹配 ATX 标题格式，以 1-6 个 # 开头
+ */
 function isAtxHeadingLine(line: string): boolean {
   return /^[ \t]{0,3}#{1,6}(?:\s|$)/.test(line);
 }
 
+/**
+ * 判断一行是否是列表行
+ * @param line 要判断的行
+ * @returns 如果是列表行，返回 true；否则返回 false
+ * @description 使用正则表达式匹配列表行格式，支持：
+ * - 无序列表：以 -, +, * 开头
+ * - 有序列表：以数字+点或括号开头
+ */
 function isListLine(line: string): boolean {
   return /^[ \t]{0,3}(?:[-+*]|\d+[.)])\s+/.test(line);
 }
 
+/**
+ * 判断一行是否是列表续行
+ * @param line 要判断的行
+ * @returns 如果是列表续行，返回 true；否则返回 false
+ * @description 匹配以至少 2 个空格开头且后面跟着非空白字符的行
+ */
 function isListContinuationLine(line: string): boolean {
   return /^\s{2,}\S/.test(line);
 }
 
+/**
+ * 判断一行是否是代码块标记行
+ * @param line 要判断的行
+ * @returns 如果是代码块标记行，返回 true；否则返回 false
+ * @description 匹配以至少 3 个反引号或波浪号开头的行
+ */
 function isFenceLine(line: string): boolean {
   return /^\s*([`~])\1{2,}/.test(line);
 }
 
+/**
+ * 判断是否应该规范化无空格列表
+ * @param marker 列表标记
+ * @param content 列表内容
+ * @returns 如果应该规范化，返回 true；否则返回 false
+ * @description 判断逻辑：
+ * 1. 如果标记不是 "*"，应该规范化
+ * 2. 如果标记是 "*"，检查内容的第一个 token 是否包含 "*"，如果不包含则应该规范化
+ */
 function shouldNormalizeNoSpaceList(marker: string, content: string): boolean {
   if (marker !== "*") {
     return true;

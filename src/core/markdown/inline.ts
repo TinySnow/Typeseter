@@ -1,4 +1,4 @@
-﻿﻿/**
+﻿﻿﻿﻿/**
  * Markdown 行内排版器：
  * - 先拆分行内代码范围（`...`），代码内容不改；
  * - 再识别链接/图片/URL token，避免修改 URL 本体；
@@ -130,6 +130,18 @@ function fmtNonCode(seg: string, opt: Option, preview: boolean): string {
   return out;
 }
 
+/**
+ * 处理链接、图片等标记
+ * @param token 标记字符串
+ * @param opt 排版选项
+ * @param preview 是否为预览模式
+ * @returns 处理后的字符串
+ * @description 处理过程：
+ * 1. 尝试匹配链接或图片格式
+ * 2. 如果不是链接或图片，直接保持原样
+ * 3. 如果是链接或图片，对标签部分进行处理
+ * 4. 保持链接或图片的格式
+ */
 function fmtTok(token: string, opt: Option, preview: boolean): string {
   const linkM = token.match(LINK_TOK_RE);
   if (!linkM) {

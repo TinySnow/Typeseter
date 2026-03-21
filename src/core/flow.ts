@@ -23,6 +23,18 @@ const rules: ReadonlyArray<Rule> = [
   lineGapRule,
 ];
 
+/**
+ * 执行纯文本排版规则
+ * @param paras 段落数组
+ * @param opt 排版选项
+ * @returns 经过所有规则处理后的段落数组
+ * @description 执行顺序：
+ * 1. rmBlankRule - 移除空白
+ * 2. insIndentRule - 插入缩进
+ * 3. coreRule - 核心规则
+ * 4. punctRule - 标点规则
+ * 5. lineGapRule - 行间距规则
+ */
 function runPlain(paras: Paras, opt: Option): Paras {
   let curr = paras;
   for (const rule of rules) {
