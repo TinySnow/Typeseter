@@ -9,15 +9,29 @@ import "./style.css";
 import { defaultPTS } from "../core/models/default-pure-setting";
 import { defs, mdOffKeys } from "./app/defs";
 import { initRefs } from "./app/dom";
-import { loadCfg, saveCfg, loadMode, saveMode, loadPreview, savePreview } from "./app/storage";
-import { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput } from "./app/ui";
+import {
+  loadCfg,
+  saveCfg,
+  loadMode,
+  saveMode,
+  loadPreview,
+  savePreview,
+  loadProfiles,
+  saveProfiles,
+} from "./app/storage";
+import { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput, syncProfileUi } from "./app/ui";
 import { supportsAdvancedRegex } from "../core/regex-support";
-import type { Mode } from "./app/types";
+import type { ConfigProfile, Mode } from "./app/types";
 
 function startWebApp() {
   const refs = initRefs();
   let cfg = loadCfg();
   let mode: Mode = loadMode();
+  let profiles = loadProfiles();
+  let profileId: string | null = profiles[0]?.id ?? null;
+
+  lockSummaryToggle(refs.modeSwitch);
+  lockSummaryToggle(refs.profileToolbar);
 
   renderCks(defs, cfg, (key, checked) => {
     cfg[key] = checked;
@@ -28,6 +42,7 @@ function startWebApp() {
   syncModeRadios(mode);
   refs.mdPreview.checked = loadPreview();
   syncModeUi(mode, refs, mdOffKeys);
+  refreshProfileUi();
 
   if (!supportsAdvancedRegex()) {
     console.warn("Advanced regex is unsupported. Typeseter is running in compatibility mode.");
@@ -46,6 +61,89 @@ function startWebApp() {
 
   refs.mdPreview.addEventListener("change", () => {
     savePreview(refs.mdPreview.checked);
+  });
+
+  refs.profileSaveBtn.addEventListener("click", () => {
+    const suggested = suggestProfileName(mode, profiles);
+    const nameRaw = window.prompt("请输入配置文件名称", suggested);
+    if (nameRaw == null) {
+      return;
+    }
+
+    const name = nameRaw.trim();
+    if (!name) {
+      alert("配置文件名称不能为空。");
+      return;
+    }
+
+    const sameName = profiles.find((p) => p.name === name);
+    if (sameName) {
+      const overwrite = window.confirm(`已存在同名配置「${name}」，是否覆盖？`);
+      if (!overwrite) {
+        return;
+      }
+
+      saveOrUpdateProfile(name, sameName.id);
+      alert(`已覆盖配置「${name}」。`);
+      return;
+    }
+
+    saveOrUpdateProfile(name);
+    alert(`已保存配置「${name}」。`);
+  });
+
+  refs.profileSelect.addEventListener("change", () => {
+    profileId = refs.profileSelect.value || null;
+    refreshProfileUi();
+  });
+
+  refs.profileApplyBtn.addEventListener("click", () => {
+    const profile = findSelectedProfile(profiles, refs.profileSelect.value || profileId);
+    if (!profile) {
+      return;
+    }
+
+    cfg = { ...defaultPTS, ...profile.cfg };
+    saveCfg(cfg);
+    syncCfgUi(defs, cfg, refs);
+
+    mode = profile.mode;
+    saveMode(mode);
+    syncModeRadios(mode);
+    syncModeUi(mode, refs, mdOffKeys);
+
+    refs.mdPreview.checked = profile.preview;
+    savePreview(profile.preview);
+
+    profileId = profile.id;
+    refreshProfileUi();
+  });
+
+  refs.profileOverwriteBtn.addEventListener("click", () => {
+    const profile = findSelectedProfile(profiles, refs.profileSelect.value || profileId);
+    if (!profile) {
+      return;
+    }
+
+    saveOrUpdateProfile(profile.name, profile.id);
+    alert(`已覆盖配置「${profile.name}」。`);
+  });
+
+  refs.profileDeleteBtn.addEventListener("click", () => {
+    const profile = findSelectedProfile(profiles, refs.profileSelect.value || profileId);
+    if (!profile) {
+      return;
+    }
+
+    const ok = window.confirm(`确定删除配置「${profile.name}」吗？`);
+    if (!ok) {
+      return;
+    }
+
+    profiles = profiles.filter((item) => item.id !== profile.id);
+    saveProfiles(profiles);
+    profileId = profiles[0]?.id ?? null;
+    refreshProfileUi();
   });
 
   refs.lineGapSel.addEventListener("change", () => {
@@ -94,6 +192,76 @@ function startWebApp() {
       document.execCommand("copy");
     }
   });
+
+  function refreshProfileUi() {
+    if (!profiles.some((p) => p.id === profileId)) {
+      profileId = profiles[0]?.id ?? null;
+    }
+    syncProfileUi(profiles, profileId, refs);
+  }
+
+  function saveOrUpdateProfile(name: string, forcedId?: string) {
+    const id = forcedId ?? createProfileId();
+    const next: ConfigProfile = {
+      id,
+      name,
+      cfg: { ...cfg },
+      mode,
+      preview: refs.mdPreview.checked,
+      updatedAt: Date.now(),
+    };
+
+    const idx = profiles.findIndex((item) => item.id === id);
+    if (idx >= 0) {
+      profiles[idx] = next;
+    } else {
+      profiles.unshift(next);
+    }
+
+    if (idx > 0) {
+      profiles.splice(idx, 1);
+      profiles.unshift(next);
+    }
+
+    saveProfiles(profiles);
+    profileId = id;
+    refreshProfileUi();
+  }
+}
+
+function findSelectedProfile(
+  profiles: ReadonlyArray<ConfigProfile>,
+  id: string | null | undefined
+): ConfigProfile | null {
+  if (!id) {
+    return null;
+  }
+  return profiles.find((p) => p.id === id) ?? null;
+}
+
+function suggestProfileName(mode: Mode, profiles: ReadonlyArray<ConfigProfile>): string {
+  const base = mode === "markdown" ? "Markdown 配置" : "纯文本配置";
+  if (!profiles.some((p) => p.name === base)) {
+    return base;
+  }
+
+  let i = 2;
+  while (profiles.some((p) => p.name === `${base} ${i}`)) {
+    i += 1;
+  }
+  return `${base} ${i}`;
+}
+
+function createProfileId(): string {
+  return `cfg_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function lockSummaryToggle(node: HTMLElement) {
+  const stop = (event: Event) => {
+    event.stopPropagation();
+  };
+  node.addEventListener("click", stop);
+  node.addEventListener("keydown", stop);
 }
 
 export { startWebApp };

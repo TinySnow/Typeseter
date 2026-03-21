@@ -14,8 +14,17 @@ type Refs = {
   resetBtn: HTMLButtonElement;
   copyBtn: HTMLButtonElement;
   modeSwitch: HTMLDivElement;
+  modePreviewRow: HTMLDivElement;
   previewToggle: HTMLLabelElement;
   mdPreview: HTMLInputElement;
+  profileSaveBtn: HTMLButtonElement;
+  profilePanel: HTMLDetailsElement;
+  profileToolbar: HTMLDivElement;
+  profileSelect: HTMLSelectElement;
+  profileMeta: HTMLSpanElement;
+  profileApplyBtn: HTMLButtonElement;
+  profileOverwriteBtn: HTMLButtonElement;
+  profileDeleteBtn: HTMLButtonElement;
 };
 
 function initRefs(): Refs {
@@ -27,8 +36,17 @@ function initRefs(): Refs {
     resetBtn: mustGet<HTMLButtonElement>("reset-btn"),
     copyBtn: mustGet<HTMLButtonElement>("copy-btn"),
     modeSwitch: mustGet<HTMLDivElement>("mode-switch"),
+    modePreviewRow: mustGet<HTMLDivElement>("mode-preview-row"),
     previewToggle: mustGet<HTMLLabelElement>("preview-toggle"),
     mdPreview: mustGet<HTMLInputElement>("markdown-protection-preview"),
+    profileSaveBtn: mustGet<HTMLButtonElement>("profile-save-btn"),
+    profilePanel: mustGet<HTMLDetailsElement>("profile-panel"),
+    profileToolbar: mustGet<HTMLDivElement>("profile-toolbar"),
+    profileSelect: mustGet<HTMLSelectElement>("profile-select"),
+    profileMeta: mustGet<HTMLSpanElement>("profile-meta"),
+    profileApplyBtn: mustGet<HTMLButtonElement>("profile-apply-btn"),
+    profileOverwriteBtn: mustGet<HTMLButtonElement>("profile-overwrite-btn"),
+    profileDeleteBtn: mustGet<HTMLButtonElement>("profile-delete-btn"),
   };
 }
 

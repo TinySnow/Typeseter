@@ -37,6 +37,25 @@ body {
   font-size: 28px;
 }
 
+.top-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.top-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.top-actions button {
+  font-size: 13px;
+  padding: 7px 10px;
+}
+
 .panel {
   margin-top: 16px;
   border: 1px solid var(--line);
@@ -81,11 +100,49 @@ body {
   gap: 8px;
   margin-top: 0;
   color: var(--muted);
-  font-size: 14px;
+  font-size: inherit;
 }
 
 .preview-toggle input {
   margin: 0;
+}
+
+.collapse-panel {
+  padding: 10px 14px 12px;
+}
+
+.collapse-panel > .collapse-summary {
+  cursor: pointer;
+  user-select: none;
+}
+
+.collapse-summary > .collapse-head {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.collapse-summary > .collapse-head .panel-title {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.collapse-body {
+  margin-top: 10px;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+}
+
+.mode-preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 14px;
 }
 
 .panel-head {
@@ -108,10 +165,35 @@ body {
   margin-bottom: 0;
 }
 
+.profile-toolbar button {
+  font-size: 13px;
+  padding: 7px 10px;
+  font-weight: 400;
+}
+
 details > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
   font-weight: 700;
   user-select: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary::before {
+  content: "▸";
+  flex: 0 0 auto;
+  font-size: 1.35em;
+  line-height: 1;
+}
+
+details[open] > summary::before {
+  content: "▾";
 }
 
 .settings {
@@ -160,8 +242,31 @@ details > summary {
   flex: 1 1 260px;
 }
 
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.profile-row label {
+  white-space: nowrap;
+}
+
+.profile-row select {
+  min-width: 220px;
+  flex: 1 1 260px;
+}
+
+.profile-meta {
+  color: var(--muted);
+  font-size: inherit;
+}
+
 .line-gap-row select,
 .line-gap-row input,
+.profile-row select,
 textarea {
   padding: 9px 10px;
   border: 1px solid var(--line);
@@ -240,6 +345,18 @@ textarea {
     margin-left: 0;
   }
 
+  .mode-preview-row {
+    align-items: flex-start;
+  }
+
+  .collapse-panel {
+    padding: 10px 12px;
+  }
+
+  .top-actions {
+    margin-left: auto;
+  }
+
   .panel-head .toolbar {
     width: 100%;
   }
@@ -249,6 +366,10 @@ textarea {
   }
 
   .line-gap-row label {
+    width: 100%;
+  }
+
+  .profile-row label {
     width: 100%;
   }
 

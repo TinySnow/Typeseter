@@ -6,7 +6,7 @@
 
 import type { Option } from "../../core/models/option";
 import { findSettingCheckbox, getModeRadios } from "./dom";
-import type { Mode, BoolKey, SettingDef } from "./types";
+import type { Mode, BoolKey, ConfigProfile, SettingDef } from "./types";
 import type { Refs } from "./dom";
 
 function renderCks(defs: ReadonlyArray<SettingDef>, cfg: Option, onCheck: (key: BoolKey, checked: boolean) => void) {
@@ -64,6 +64,7 @@ function syncModeUi(mode: Mode, refs: Refs, mdOffKeys: ReadonlyArray<BoolKey>) {
 
   syncMdOnly(isMd);
 
+  refs.modePreviewRow.style.display = isMd ? "flex" : "none";
   refs.previewToggle.style.display = isMd ? "inline-flex" : "none";
 
   refs.lineGapSel.disabled = isMd;
@@ -91,6 +92,38 @@ function syncBrkInput(refs: Refs) {
   refs.lineBrkInput.disabled = !custom;
 }
 
+function syncProfileUi(
+  profiles: ReadonlyArray<ConfigProfile>,
+  selectedId: string | null,
+  refs: Refs
+) {
+  refs.profilePanel.style.display = profiles.length > 0 ? "" : "none";
+
+  refs.profileSelect.innerHTML = "";
+  for (const profile of profiles) {
+    const opt = document.createElement("option");
+    opt.value = profile.id;
+    opt.textContent = profile.name;
+    refs.profileSelect.appendChild(opt);
+  }
+
+  const hasProfiles = profiles.length > 0;
+  refs.profileApplyBtn.disabled = !hasProfiles;
+  refs.profileOverwriteBtn.disabled = !hasProfiles;
+  refs.profileDeleteBtn.disabled = !hasProfiles;
+  refs.profileSelect.disabled = !hasProfiles;
+
+  if (!hasProfiles) {
+    refs.profileMeta.textContent = "";
+    return;
+  }
+
+  const targetId = profiles.some((p) => p.id === selectedId) ? selectedId : profiles[0].id;
+  refs.profileSelect.value = targetId;
+  const target = profiles.find((p) => p.id === targetId) as ConfigProfile;
+  refs.profileMeta.textContent = `最近更新：${new Date(target.updatedAt).toLocaleString()}`;
+}
+
 function mustGet<T extends HTMLElement>(id: string): T {
   const node = document.getElementById(id);
   if (!node) {
@@ -99,4 +132,4 @@ function mustGet<T extends HTMLElement>(id: string): T {
   return node as T;
 }
 
-export { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput };
+export { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput, syncProfileUi };

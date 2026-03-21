@@ -15,28 +15,55 @@
     -->
     <main class="app">
       <header class="top">
-        <h1>排版器</h1>
-      </header>
-
-      <section class="panel">
-        <div class="mode-row">
-          <h2 class="panel-title">模式</h2>
-          <div class="mode-switch" id="mode-switch">
-            <label>
-              <input type="radio" name="typeset-mode" value="plain" checked />
-              纯文本模式
-            </label>
-            <label>
-              <input type="radio" name="typeset-mode" value="markdown" />
-              Markdown 模式
-            </label>
-            <label id="preview-toggle" class="preview-toggle" style="display: none">
-              <input id="markdown-protection-preview" type="checkbox" />
-              Markdown 保护范围预览（会插入 KEEP 标记）
-            </label>
+        <div class="top-row">
+          <h1>排版器</h1>
+          <div class="top-actions">
+            <button id="profile-save-btn" type="button" class="secondary">保存为配置文件</button>
           </div>
         </div>
-      </section>
+      </header>
+
+      <details id="mode-panel" class="panel collapse-panel" open>
+        <summary class="collapse-summary">
+          <div class="collapse-head">
+            <h2 class="panel-title">模式</h2>
+            <div class="mode-switch" id="mode-switch">
+              <label>
+                <input type="radio" name="typeset-mode" value="plain" checked />
+                纯文本模式
+              </label>
+              <label>
+                <input type="radio" name="typeset-mode" value="markdown" />
+                Markdown 模式
+              </label>
+            </div>
+          </div>
+        </summary>
+        <div id="mode-preview-row" class="collapse-body mode-preview-row" style="display: none">
+          <label id="preview-toggle" class="preview-toggle">
+            <input id="markdown-protection-preview" type="checkbox" />
+            Markdown 保护范围预览（会插入 KEEP 标记）
+          </label>
+        </div>
+      </details>
+
+      <details id="profile-panel" class="panel collapse-panel" style="display: none" open>
+        <summary class="collapse-summary">
+          <div class="collapse-head">
+            <h2 class="panel-title">配置文件</h2>
+            <div id="profile-toolbar" class="toolbar profile-toolbar">
+              <button id="profile-apply-btn" type="button">应用配置</button>
+              <button id="profile-overwrite-btn" type="button" class="secondary">覆盖当前配置</button>
+              <button id="profile-delete-btn" type="button" class="secondary">删除配置</button>
+            </div>
+          </div>
+        </summary>
+        <div class="collapse-body profile-row">
+          <label for="profile-select">配置名称</label>
+          <select id="profile-select"></select>
+          <span id="profile-meta" class="profile-meta"></span>
+        </div>
+      </details>
 
       <section class="panel">
         <details open>

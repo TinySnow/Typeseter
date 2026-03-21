@@ -17,4 +17,13 @@ type SettingDef = {
   mdOnly?: boolean;
 };
 
-export type { BoolKey, Mode, SettingDef };
+type ConfigProfile = {
+  id: string;
+  name: string;
+  cfg: Option;
+  mode: Mode;
+  preview: boolean;
+  updatedAt: number;
+};
+
+export type { BoolKey, Mode, SettingDef, ConfigProfile };
