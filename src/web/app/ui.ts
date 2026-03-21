@@ -27,7 +27,19 @@ function renderCks(defs: ReadonlyArray<SettingDef>, cfg: Option, onCheck: (key: 
       onCheck(def.key, ck.checked);
     });
 
-    label.append(ck, document.createTextNode(def.label));
+    const parsed = parseInlineHint(def.label);
+    const useInlineHint = def.containerId === "other-settings" && def.mdOnly && parsed !== null;
+    const text = useInlineHint ? parsed.main : def.label;
+
+    label.append(ck, document.createTextNode(text));
+    if (useInlineHint) {
+      const hint = document.createElement("span");
+      hint.className = "inline-help";
+      hint.textContent = "i";
+      hint.title = parsed.hint;
+      hint.setAttribute("aria-label", parsed.hint);
+      label.appendChild(hint);
+    }
     boxWrap.appendChild(label);
   }
 }
@@ -130,6 +142,21 @@ function mustGet<T extends HTMLElement>(id: string): T {
     throw new Error(`Missing element: ${id}`);
   }
   return node as T;
+}
+
+function parseInlineHint(label: string): { main: string; hint: string } | null {
+  const m = label.match(/^(.*?)[（(]([^）)]+)[）)]\s*$/);
+  if (!m) {
+    return null;
+  }
+
+  const main = m[1].trimEnd();
+  const hint = m[2].trim();
+  if (!main || !hint) {
+    return null;
+  }
+
+  return { main, hint };
 }
 
 export { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput, syncProfileUi };

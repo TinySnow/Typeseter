@@ -201,10 +201,12 @@ details[open] > summary::before {
   grid-template-columns: 1fr;
   gap: 12px;
   margin-top: 12px;
+  font-size: 14px;
 }
 
 .settings h2 {
   font-size: 15px;
+  font-weight: 600;
   margin: 0 0 8px;
 }
 
@@ -217,8 +219,29 @@ details[open] > summary::before {
 .check-grid label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   color: var(--text);
+}
+
+.check-grid label .inline-help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+}
+
+.check-grid label .inline-help:hover {
+  border-color: #9ca9bd;
+  color: #3f5068;
 }
 
 .line-gap-row {
