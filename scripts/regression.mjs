@@ -57,6 +57,7 @@ const fixtures = [
     input: "tests/case/test-text-markdown-regression.md",
     expected: "tests/baseline/markdown.output.md",
     run: (mods, text) => mods.typesetMarkdown(text, mods.defaultSettings, false),
+    assertIdempotent: true,
   },
 ];
 
@@ -93,6 +94,17 @@ function main() {
         console.error(`[diff] ${f.name}: ${msg}`);
       } else {
         console.log(`[ok] ${f.name}`);
+      }
+
+      if (f.assertIdempotent) {
+        const secondPass = normalizeLf(f.run(mods, outputText));
+        if (secondPass !== outputText) {
+          hasDiff = true;
+          const msg = firstDiff(outputText, secondPass);
+          console.error(`[non-idempotent] ${f.name}: ${msg}`);
+        } else {
+          console.log(`[ok] ${f.name} idempotent`);
+        }
       }
     }
 

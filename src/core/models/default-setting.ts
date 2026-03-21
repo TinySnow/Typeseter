@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 默认配置：
  * - plain 与 markdown 默认项分别维护；
  * - defaultSettings 作为最终合并配置用于运行时初始化。

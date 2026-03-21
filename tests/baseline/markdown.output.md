@@ -12,9 +12,14 @@
 
 　　裸 URL 不应改动：https://example.com/abc,def?x=1&y=2
 
-　　| 列一 | Column2 |
+| 列一 | Column2 |
 | --- | ---: |
-　　| 中文 English，混排 | 5% 利润 |
+| 中文 English，混排 | 5% 利润 |
+
+- 列表 English，项
+1. 有序列表 English，项
+
+> 引用 English，内容。
 
 <!--
 这个 HTML 注释块内部不应该被排版,
@@ -62,4 +67,3 @@ print(text)
 　　*测试* 文本之二。
 
 　　测 <u>试文本之三</u> 。
-

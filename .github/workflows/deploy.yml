@@ -28,6 +28,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Type Check
+        run: npm run typecheck
+
+      - name: Baseline Regression
+        run: npm run test:baseline
+
       - name: Build
         run: npm run build
 

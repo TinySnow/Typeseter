@@ -1,4 +1,4 @@
-﻿/**
+/**
  * UI 渲染与状态同步：
  * - 渲染设置复选框；
  * - 同步配置、模式和段落分隔符输入框状态。
@@ -130,9 +130,9 @@ function syncProfileUi(
     return;
   }
 
-  const targetId = profiles.some((p) => p.id === selectedId) ? selectedId : profiles[0].id;
+  const targetId = selectedId && profiles.some((p) => p.id === selectedId) ? selectedId : profiles[0].id;
   refs.profileSelect.value = targetId;
-  const target = profiles.find((p) => p.id === targetId) as ConfigProfile;
+  const target = profiles.find((p) => p.id === targetId) ?? profiles[0];
   refs.profileMeta.textContent = `最近更新：${new Date(target.updatedAt).toLocaleString()}`;
 }
 

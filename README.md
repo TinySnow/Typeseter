@@ -1,4 +1,4 @@
-﻿# Typeseter
+# Typeseter
 
 一个面向中文写作的小型排版工具，当前为纯静态版本（无 Umi、无 Ant、无 React）。
 

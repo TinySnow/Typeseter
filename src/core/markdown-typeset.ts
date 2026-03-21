@@ -1,4 +1,4 @@
-﻿﻿﻿﻿/**
+/**
  * Markdown 排版入口：
  * - 逐行判定是否需要保护；
  * - 普通文本行走行内排版；
@@ -61,7 +61,7 @@ function typesetMarkdown(text: string, opt: Option, preview = false): string {
     }
 
     const formatted = fmtMdLine(line, mdOpt, preview);
-    lines[i] = applyMdIndent(formatted, line, opt);
+    lines[i] = applyMdIndent(formatted, line, lines, i, opt);
   }
 
   let out = lines.join("\n");
@@ -313,7 +313,13 @@ function isHr(line: string): boolean {
  * 4. 如果已经有前导缩进，直接返回格式化后的行
  * 5. 否则添加两个全角空格作为缩进
  */
-function applyMdIndent(formatted: string, raw: string, opt: Option): string {
+function applyMdIndent(
+  formatted: string,
+  raw: string,
+  lines: ReadonlyArray<string>,
+  idx: number,
+  opt: Option
+): string {
   if (!opt.mdIndentParagraphs) {
     return formatted;
   }
@@ -324,6 +330,10 @@ function applyMdIndent(formatted: string, raw: string, opt: Option): string {
 
   if (isAtxHeadingLine(raw)) {
     return stripHeadingIndent(formatted);
+  }
+
+  if (isMdStructuralLine(raw, lines, idx)) {
+    return formatted;
   }
 
   if (hasLeadingIndent(formatted)) {
@@ -341,6 +351,33 @@ function applyMdIndent(formatted: string, raw: string, opt: Option): string {
  */
 function stripHeadingIndent(line: string): string {
   return line.replace(/^([ \t]{0,3})　+/, "$1");
+}
+
+function isMdStructuralLine(line: string, lines: ReadonlyArray<string>, idx: number): boolean {
+  if (isListLine(line) || isBlockquote(line) || isHr(line)) {
+    return true;
+  }
+
+  return isLikelyTableLine(line, lines, idx);
+}
+
+function isLikelyTableLine(line: string, lines: ReadonlyArray<string>, idx: number): boolean {
+  const curr = line.trim();
+  if (!curr.includes("|")) {
+    return false;
+  }
+
+  const prev = (lines[idx - 1] ?? "").trim();
+  const next = (lines[idx + 1] ?? "").trim();
+  if (isTableSepLine(curr) || isTableSepLine(prev) || isTableSepLine(next)) {
+    return true;
+  }
+
+  if (curr.startsWith("|")) {
+    return true;
+  }
+
+  return prev.includes("|") || next.includes("|");
 }
 
 /**

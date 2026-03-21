@@ -70,7 +70,7 @@ function applyMarkdownNormalizeRules(text: string, opt: MarkdownNormalizeSwitche
 
   let out = lines.join("\n");
   if (opt.ensureSingleTrailingNewline) {
-    out = out.replace(/\n*$/g, "\n");
+    out = out.replace(/\n*$/, "\n");
   }
   return out;
 }
