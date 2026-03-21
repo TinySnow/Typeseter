@@ -91,7 +91,7 @@ function isFenceClose(line: string, char: "`" | "~" | "", len: number): boolean 
   }
 
   const escaped = char === "`" ? "`" : "~";
-  return new RegExp(`^\s*${escaped}{${len},}\s*$`).test(line);
+  return new RegExp(`^\\s*${escaped}{${len},}\\s*$`).test(line);
 }
 
 /**
