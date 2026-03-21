@@ -22,15 +22,19 @@
 -->
 
 ```ts
+
 // fenced code block should stay intact
 const msg = "中文,English. 5%";
 function sum(a:number,b:number){return a+b;}
+
 ```
 
 ~~~python
+
 # another fence style
 text = "中文,English. 5%"
 print(text)
+
 ~~~
 
 　　引号边界样例（英文引号输入）
@@ -50,3 +54,4 @@ print(text)
 　　*测试* 文本之二。
 
 　　测 <u>试文本之三</u> 。
+

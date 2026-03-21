@@ -8,6 +8,7 @@
 import type { Option } from "./models/option";
 import { lineGuard } from "./markdown/line-guard";
 import { fmtMdLine } from "./markdown/inline";
+import { applyMarkdownNormalizeRules } from "./markdown/normalize";
 import { initGuard, safeMdOpt, stripKeep, keepWrap } from "./markdown/shared";
 
 type MdBlockKind =
@@ -44,7 +45,26 @@ function typesetMarkdown(text: string, opt: Option, preview = false): string {
     lines[i] = applyMdIndent(formatted, line, opt);
   }
 
-  return lines.join("\n");
+  let out = lines.join("\n");
+
+  if (!preview) {
+    const normalizeSwitches = {
+      trimTrailingSpaces: opt.mdTrimTrailingSpaces,
+      headingSpaceAfterHash: opt.mdHeadingSpaceAfterHash,
+      headingSingleSpaceAfterHash: opt.mdHeadingSingleSpaceAfterHash,
+      blankLineAroundHeadings: opt.mdBlankLineAroundHeadings,
+      listMarkerSpace: opt.mdListMarkerSpace,
+      blankLineAroundFences: opt.mdBlankLineAroundFences,
+      blankLineAroundLists: opt.mdBlankLineAroundLists,
+      ensureSingleTrailingNewline: opt.mdEnsureSingleTrailingNewline,
+    };
+    const hasNormalizeEnabled = Object.values(normalizeSwitches).some(Boolean);
+    if (hasNormalizeEnabled) {
+      out = applyMarkdownNormalizeRules(out, normalizeSwitches);
+    }
+  }
+
+  return out;
 }
 
 function insertMdBlankLines(lines: string[]): string[] {

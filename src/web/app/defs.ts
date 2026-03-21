@@ -73,6 +73,54 @@ const defs: SettingDef[] = [
     containerId: "other-settings",
     mdOnly: true,
   },
+  {
+    key: "mdTrimTrailingSpaces",
+    label: "删除行尾空白",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdHeadingSpaceAfterHash",
+    label: "标题井号后补空格",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdHeadingSingleSpaceAfterHash",
+    label: "标题井号后空格归一化",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdBlankLineAroundHeadings",
+    label: "标题前后补空行",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdListMarkerSpace",
+    label: "列表标记后空格归一化",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdBlankLineAroundFences",
+    label: "围栏代码块前后补空行",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdBlankLineAroundLists",
+    label: "列表前后补空行",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdEnsureSingleTrailingNewline",
+    label: "文件末尾保证单个换行",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
 ];
 
 const mdOffKeys: ReadonlyArray<BoolKey> = ["deleteBlankLines", "insertIndent"];

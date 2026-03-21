@@ -35,6 +35,14 @@ interface Option {
   mdIndentParagraphs: boolean;
   mdStyleSpacing: boolean;
   mdAutoBlankLines: boolean;
+  mdTrimTrailingSpaces: boolean;
+  mdHeadingSpaceAfterHash: boolean;
+  mdHeadingSingleSpaceAfterHash: boolean;
+  mdBlankLineAroundHeadings: boolean;
+  mdListMarkerSpace: boolean;
+  mdBlankLineAroundFences: boolean;
+  mdBlankLineAroundLists: boolean;
+  mdEnsureSingleTrailingNewline: boolean;
 
   fixOthers: boolean;
   insertSpaceAfterPercentSign: boolean;
