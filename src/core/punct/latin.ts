@@ -39,6 +39,13 @@ function enBr2CnBr(on: boolean, paras: Paras): Paras {
   });
 }
 
+/**
+ * 判断字符数组中指定范围内是否包含汉字
+ * @param chars 字符数组
+ * @param start 起始索引（包含）
+ * @param end 结束索引（不包含）
+ * @returns 如果指定范围内包含汉字，返回 true；否则返回 false
+ */
 function hasHan(chars: string[], start: number, end: number): boolean {
   for (let i = start; i < end; i += 1) {
     if (isHan(chars[i])) {

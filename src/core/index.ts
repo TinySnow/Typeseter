@@ -5,7 +5,7 @@
 
 export type { Option } from "./models/option";
 
-export { defaultPTS } from "./models/default-pure-setting";
+export { defaultPlainSettings, defaultMarkdownSettings, defaultSettings } from "./models/default-setting";
 export { typeset } from "./typeset";
 export { typesetMarkdown } from "./markdown-typeset";
 export { applyMarkdownNormalizeRules } from "./markdown/normalize";

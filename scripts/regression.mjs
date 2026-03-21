@@ -23,7 +23,7 @@ const update = process.argv.includes("--update");
 
 const compileTargets = [
   "src/core/models/option.ts",
-  "src/core/models/default-pure-setting.ts",
+  "src/core/models/default-setting.ts",
   "src/core/chars.ts",
   "src/core/flow.ts",
   "src/core/typeset.ts",
@@ -50,13 +50,13 @@ const fixtures = [
     name: "plain",
     input: "tests/case/test-text-plain-regression.txt",
     expected: "tests/baseline/plain.output.txt",
-    run: (mods, text) => mods.typeset(text, mods.defaultPTS),
+    run: (mods, text) => mods.typeset(text, mods.defaultSettings),
   },
   {
     name: "markdown",
     input: "tests/case/test-text-markdown-regression.md",
     expected: "tests/baseline/markdown.output.md",
-    run: (mods, text) => mods.typesetMarkdown(text, mods.defaultPTS, false),
+    run: (mods, text) => mods.typesetMarkdown(text, mods.defaultSettings, false),
   },
 ];
 
@@ -151,8 +151,8 @@ function loadModules() {
   const req = createRequire(path.join(tmpDir, "_entry.cjs"));
   const { typeset } = req(path.join(tmpDir, "typeset.js"));
   const { typesetMarkdown } = req(path.join(tmpDir, "markdown-typeset.js"));
-  const { defaultPTS } = req(path.join(tmpDir, "models", "default-pure-setting.js"));
-  return { typeset, typesetMarkdown, defaultPTS };
+  const { defaultSettings } = req(path.join(tmpDir, "models", "default-setting.js"));
+  return { typeset, typesetMarkdown, defaultSettings };
 }
 
 function cleanupTmp() {

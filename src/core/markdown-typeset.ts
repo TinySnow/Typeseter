@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿﻿/**
  * Markdown 排版入口：
  * - 逐行判定是否需要保护；
  * - 普通文本行走行内排版；
@@ -21,6 +21,25 @@ type MdBlockKind =
   | "hr"
   | "other";
 
+/**
+ * Markdown 排版处理函数
+ * @param text 要排版的 Markdown 文本
+ * @param opt 排版选项
+ * @param preview 是否为预览模式，默认为 false
+ * @returns 排版后的 Markdown 文本
+ * @description 处理过程：
+ * 1. 去除文本中的保护标记
+ * 2. 获取安全的 Markdown 选项
+ * 3. 将文本按换行符分割成行数组
+ * 4. 如果启用了 mdAutoBlankLines 选项，则插入 Markdown 空白行
+ * 5. 初始化保护状态
+ * 6. 遍历每一行：
+ *    - 检查是否需要保护，如果需要则保持原样
+ *    - 否则使用 fmtMdLine 函数格式化行，并应用 Markdown 缩进
+ * 7. 将处理后的行重新连接成字符串
+ * 8. 如果不是预览模式，且启用了任何归一化选项，则应用 Markdown 归一化规则
+ * 9. 返回处理后的文本
+ */
 function typesetMarkdown(text: string, opt: Option, preview = false): string {
   const clean = stripKeep(text);
   const mdOpt = safeMdOpt(opt);
@@ -90,6 +109,27 @@ function insertMdBlankLines(lines: string[]): string[] {
   return out;
 }
 
+/**
+ * 对 Markdown 行进行分类
+ * @param line 当前要分类的行
+ * @param reason 行保护的原因
+ * @param lines 所有行的数组
+ * @param idx 当前行的索引
+ * @param inTable 是否在表格中的标志
+ * @returns 包含行类型和是否在表格中标志的对象
+ * @description 分类逻辑：
+ * 1. 如果是空行，返回 { kind: "blank", inTable: false }
+ * 2. 如果有保护原因：
+ *    - 如果是表格分隔符，返回 { kind: "table", inTable: true }
+ *    - 如果是代码块或 HTML 注释，返回 { kind: "protected", inTable: false }
+ * 3. 如果当前行是表格标题，返回 { kind: "table", inTable: true }
+ * 4. 如果当前在表格中且行包含 "|", 返回 { kind: "table", inTable: true }
+ * 5. 如果是 ATX 标题行，返回 { kind: "heading", inTable: false }
+ * 6. 如果是列表行，返回 { kind: "list", inTable: false }
+ * 7. 如果是引用块，返回 { kind: "blockquote", inTable: false }
+ * 8. 如果是水平分隔线，返回 { kind: "hr", inTable: false }
+ * 9. 否则返回 { kind: "other", inTable: false }
+ */
 function classifyMdLine(
   line: string,
   reason: string | null,

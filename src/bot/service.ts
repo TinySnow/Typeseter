@@ -4,7 +4,7 @@
  * - 不绑定 grammy 或任何传输层，便于后续迁移到 bot/CLI/可执行文件。
  */
 
-import { defaultPTS } from "../core/models/default-pure-setting";
+import { defaultSettings } from "../core/models/default-setting";
 import type { Option } from "../core/models/option";
 import { typeset } from "../core/typeset";
 import { typesetMarkdown } from "../core/markdown-typeset";
@@ -86,20 +86,20 @@ function normalizeMode(mode?: BotMode): BotMode {
  */
 function normalizeOpt(opt?: Partial<Option>): Option {
   const next: Option = {
-    ...defaultPTS,
+    ...defaultSettings,
     ...opt,
   };
 
   if (!Number.isFinite(next.lineGap)) {
-    next.lineGap = defaultPTS.lineGap;
+    next.lineGap = defaultSettings.lineGap;
   }
 
   if (next.lineGap < -1) {
-    next.lineGap = defaultPTS.lineGap;
+    next.lineGap = defaultSettings.lineGap;
   }
 
   if (typeof next.customedLineBreaker !== "string") {
-    next.customedLineBreaker = defaultPTS.customedLineBreaker;
+    next.customedLineBreaker = defaultSettings.customedLineBreaker;
   }
 
   return next;

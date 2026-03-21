@@ -4,7 +4,7 @@
  * - 在 localStorage 不可用时静默降级。
  */
 
-import { defaultPTS } from "../../core/models/default-pure-setting";
+import { defaultSettings } from "../../core/models/default-setting";
 import type { Option } from "../../core/models/option";
 import type { ConfigProfile, Mode } from "./types";
 
@@ -16,17 +16,17 @@ const PROFILE_KEY = "typeset-config-profiles";
 function loadCfg(): Option {
   const raw = getItem(CFG_KEY);
   if (!raw) {
-    return { ...defaultPTS };
+    return { ...defaultSettings };
   }
 
   try {
     const parsed = JSON.parse(raw) as Partial<Option>;
     return {
-      ...defaultPTS,
+      ...defaultSettings,
       ...parsed,
     };
   } catch {
-    return { ...defaultPTS };
+    return { ...defaultSettings };
   }
 }
 
@@ -103,7 +103,7 @@ function normalizeProfile(raw: unknown): ConfigProfile | null {
     id,
     name,
     cfg: {
-      ...defaultPTS,
+      ...defaultSettings,
       ...(isObject(data.cfg) ? (data.cfg as Partial<Option>) : {}),
     },
     mode: data.mode === "markdown" ? "markdown" : "plain",

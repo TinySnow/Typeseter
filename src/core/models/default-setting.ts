@@ -1,10 +1,27 @@
 ﻿/**
- * 默认配置：用于首次加载与“重置设置”。
+ * 默认配置：
+ * - plain 与 markdown 默认项分别维护；
+ * - defaultSettings 作为最终合并配置用于运行时初始化。
  */
 
 import { Option } from "./option";
 
-const defaultPTS: Option = {
+type MarkdownSettingKeys =
+  | "mdIndentParagraphs"
+  | "mdStyleSpacing"
+  | "mdAutoBlankLines"
+  | "mdTrimTrailingSpaces"
+  | "mdHeadingSpaceAfterHash"
+  | "mdHeadingSingleSpaceAfterHash"
+  | "mdBlankLineAroundHeadings"
+  | "mdListMarkerSpace"
+  | "mdBlankLineAroundFences"
+  | "mdBlankLineAroundLists"
+  | "mdEnsureSingleTrailingNewline";
+
+type PlainSettingKeys = Exclude<keyof Option, MarkdownSettingKeys>;
+
+const defaultPlainSettings: Pick<Option, PlainSettingKeys> = {
   insertIndent: true,
 
   lineGap: 0,
@@ -31,6 +48,11 @@ const defaultPTS: Option = {
   chineseEllipsisesFold: true,
   englishBrackets2ChineseBrackets: true,
 
+  fixOthers: true,
+  insertSpaceAfterPercentSign: true,
+};
+
+const defaultMarkdownSettings: Pick<Option, MarkdownSettingKeys> = {
   mdIndentParagraphs: true,
   mdStyleSpacing: true,
   mdAutoBlankLines: true,
@@ -42,9 +64,11 @@ const defaultPTS: Option = {
   mdBlankLineAroundFences: true,
   mdBlankLineAroundLists: true,
   mdEnsureSingleTrailingNewline: true,
-
-  fixOthers: true,
-  insertSpaceAfterPercentSign: true,
 };
 
-export { defaultPTS };
+const defaultSettings: Option = {
+  ...defaultPlainSettings,
+  ...defaultMarkdownSettings,
+};
+
+export { defaultPlainSettings, defaultMarkdownSettings, defaultSettings };

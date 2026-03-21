@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
  * Markdown 行内排版器：
  * - 先拆分行内代码范围（`...`），代码内容不改；
  * - 再识别链接/图片/URL token，避免修改 URL 本体；
@@ -19,6 +19,18 @@ const TOK_RE =
   /!\[[^\]]*\]\((?:[^()\\]|\\.)*?\)|\[[^\]]*\]\((?:[^()\\]|\\.)*?\)|<https?:\/\/[^>\s]+>|https?:\/\/[^\s<>)\]]+/g;
 const LINK_TOK_RE = /^(!?\[)([^\]]*)(\]\((?:[^()\\]|\\.)*?\))$/;
 
+/**
+ * 格式化 Markdown 行
+ * @param line 要格式化的 Markdown 行
+ * @param opt 排版选项
+ * @param preview 是否为预览模式
+ * @returns 格式化后的字符串
+ * @description 处理过程：
+ * 1. 检查行是否为空，如果为空则直接返回
+ * 2. 调用 splitCode 函数将行拆分为代码段和非代码段
+ * 3. 遍历所有段，如果是代码段则保持原样，否则调用 fmtNonCode 函数处理非代码段
+ * 4. 最后返回处理后的字符串
+ */
 function fmtMdLine(line: string, opt: Option, preview: boolean): string {
   if (!line) {
     return line;

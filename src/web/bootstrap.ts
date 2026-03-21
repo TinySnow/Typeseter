@@ -6,7 +6,7 @@
  */
 
 import "./style.css";
-import { defaultPTS } from "../core/models/default-pure-setting";
+import { defaultSettings } from "../core/models/default-setting";
 import { defs, mdOffKeys } from "./app/defs";
 import { initRefs } from "./app/dom";
 import {
@@ -103,7 +103,7 @@ function startWebApp() {
       return;
     }
 
-    cfg = { ...defaultPTS, ...profile.cfg };
+    cfg = { ...defaultSettings, ...profile.cfg };
     saveCfg(cfg);
     syncCfgUi(defs, cfg, refs);
 
@@ -175,7 +175,7 @@ function startWebApp() {
   });
 
   refs.resetBtn.addEventListener("click", () => {
-    cfg = { ...defaultPTS };
+    cfg = { ...defaultSettings };
     syncCfgUi(defs, cfg, refs);
     saveCfg(cfg);
   });
@@ -240,7 +240,7 @@ function findSelectedProfile(
 }
 
 function suggestProfileName(mode: Mode, profiles: ReadonlyArray<ConfigProfile>): string {
-  const base = mode === "markdown" ? "Markdown 配置" : "纯文本配置";
+  const base = mode === "markdown" ? "md 配置" : "纯文本配置";
   if (!profiles.some((p) => p.name === base)) {
     return base;
   }
