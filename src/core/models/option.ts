@@ -46,6 +46,9 @@ interface Option {
 
   fixOthers: boolean;
   insertSpaceAfterPercentSign: boolean;
+  preserveBlankLines: boolean;
+  noIndentFirstLine: boolean;
+  mdCollapseBlankLines: boolean;
 }
 
 export { Option };

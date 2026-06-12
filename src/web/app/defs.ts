@@ -8,6 +8,7 @@ import type { BoolKey, SettingDef } from "./types";
 
 const defs: SettingDef[] = [
   { key: "deleteBlankLines", label: "删除原始空行", containerId: "common-settings" },
+  { key: "preserveBlankLines", label: "维持空行不变（诗歌等）", containerId: "common-settings" },
   { key: "insertIndent", label: "插入段首缩进", containerId: "common-settings" },
   {
     key: "deleteSpaceInChineseCharacter",
@@ -53,6 +54,11 @@ const defs: SettingDef[] = [
   {
     key: "insertSpaceAfterPercentSign",
     label: "百分号后加空格",
+    containerId: "other-settings",
+  },
+  {
+    key: "noIndentFirstLine",
+    label: "首行不缩进（如标题）",
     containerId: "other-settings",
   },
   {
@@ -118,6 +124,12 @@ const defs: SettingDef[] = [
   {
     key: "mdEnsureSingleTrailingNewline",
     label: "md 文件末尾保证单个换行",
+    containerId: "other-settings",
+    mdOnly: true,
+  },
+  {
+    key: "mdCollapseBlankLines",
+    label: "md 缩减连续空行（用br保留语义）",
     containerId: "other-settings",
     mdOnly: true,
   },

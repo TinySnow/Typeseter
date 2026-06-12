@@ -38,6 +38,11 @@ function renderCks(defs: ReadonlyArray<SettingDef>, cfg: Option, onCheck: (key: 
       hint.textContent = "i";
       hint.title = parsed.hint;
       hint.setAttribute("aria-label", parsed.hint);
+      hint.setAttribute("tabindex", "0");
+      hint.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showTooltip(hint, parsed.hint);
+      });
       label.appendChild(hint);
     }
     boxWrap.appendChild(label);
@@ -79,8 +84,8 @@ function syncModeUi(mode: Mode, refs: Refs, mdOffKeys: ReadonlyArray<BoolKey>) {
   refs.modePreviewRow.style.display = isMd ? "flex" : "none";
   refs.previewToggle.style.display = isMd ? "inline-flex" : "none";
 
-  refs.lineGapSel.disabled = isMd;
   if (isMd) {
+    refs.lineGapSel.disabled = true;
     refs.lineBrkInput.disabled = true;
     return;
   }
@@ -102,6 +107,15 @@ function syncMdOnly(enabled: boolean) {
 function syncBrkInput(refs: Refs) {
   const custom = Number(refs.lineGapSel.value) === -1;
   refs.lineBrkInput.disabled = !custom;
+}
+
+function syncBrkInputByPreserve(refs: Refs, preserve: boolean) {
+  refs.lineGapSel.disabled = preserve;
+  if (preserve) {
+    refs.lineBrkInput.disabled = true;
+  } else {
+    syncBrkInput(refs);
+  }
 }
 
 function syncProfileUi(
@@ -159,4 +173,40 @@ function parseInlineHint(label: string): { main: string; hint: string } | null {
   return { main, hint };
 }
 
-export { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput, syncProfileUi };
+function showTooltip(anchor: HTMLElement, text: string) {
+  const existing = document.querySelector<HTMLElement>(".inline-tooltip");
+  if (existing) {
+    existing.remove();
+  }
+
+  const tip = document.createElement("div");
+  tip.className = "inline-tooltip";
+  tip.textContent = text;
+
+  document.body.appendChild(tip);
+
+  const rect = anchor.getBoundingClientRect();
+  const tipH = tip.offsetHeight;
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const top = spaceBelow >= tipH + 6 ? rect.bottom + 6 : rect.top - tipH - 6;
+
+  tip.style.position = "fixed";
+  tip.style.left = `${Math.min(rect.left, window.innerWidth - tip.offsetWidth - 12)}px`;
+  tip.style.top = `${Math.max(4, top)}px`;
+
+  const dismiss = () => {
+    tip.remove();
+    document.removeEventListener("click", dismiss);
+  };
+
+  setTimeout(() => {
+    document.addEventListener("click", dismiss);
+  }, 0);
+
+  setTimeout(() => {
+    tip.remove();
+    document.removeEventListener("click", dismiss);
+  }, 3000);
+}
+
+export { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput, syncBrkInputByPreserve, syncProfileUi };

@@ -45,11 +45,12 @@ function typesetMarkdown(text: string, opt: Option, preview = false): string {
   const mdOpt = safeMdOpt(opt);
   let lines = clean.split("\n");
 
-  if (opt.mdAutoBlankLines) {
+  if (opt.mdAutoBlankLines && !opt.preserveBlankLines) {
     lines = insertMdBlankLines(lines);
   }
 
   const guard = initGuard();
+  let mdFirstParaFound = !opt.noIndentFirstLine;
 
   for (let i = 0; i < lines.length; i += 1) {
     const line = lines[i];
@@ -57,12 +58,19 @@ function typesetMarkdown(text: string, opt: Option, preview = false): string {
 
     if (reason) {
       lines[i] = keepWrap(line, reason, preview);
+      const info = classifyMdLine(line, reason, lines, i, false);
+      if (info.kind === "heading" || info.kind === "list" || info.kind === "blockquote") {
+        mdFirstParaFound = true;
+      }
       continue;
     }
 
     const formatted = fmtMdLine(line, mdOpt, preview);
     const trimmed = trimMdParagraphLeadingSpaces(formatted, line, lines, i);
-    lines[i] = applyMdIndent(trimmed, line, lines, i, opt);
+    lines[i] = applyMdIndent(trimmed, line, lines, i, opt, mdFirstParaFound);
+    if (!isBlankLine(trimmed) && !isAtxHeadingLine(line) && !isMdStructuralLine(line, lines, i)) {
+      mdFirstParaFound = true;
+    }
   }
 
   let out = lines.join("\n");
@@ -77,6 +85,7 @@ function typesetMarkdown(text: string, opt: Option, preview = false): string {
       blankLineAroundFences: opt.mdBlankLineAroundFences,
       blankLineAroundLists: opt.mdBlankLineAroundLists,
       ensureSingleTrailingNewline: opt.mdEnsureSingleTrailingNewline,
+      collapseBlankLines: opt.mdCollapseBlankLines,
     };
     const hasNormalizeEnabled = Object.values(normalizeSwitches).some(Boolean);
     if (hasNormalizeEnabled) {
@@ -319,7 +328,8 @@ function applyMdIndent(
   raw: string,
   lines: ReadonlyArray<string>,
   idx: number,
-  opt: Option
+  opt: Option,
+  mutFirstParaFound?: boolean
 ): string {
   if (!opt.mdIndentParagraphs) {
     return formatted;
@@ -338,6 +348,10 @@ function applyMdIndent(
   }
 
   if (hasLeadingIndent(formatted)) {
+    return formatted;
+  }
+
+  if (mutFirstParaFound !== undefined && !mutFirstParaFound) {
     return formatted;
   }
 

@@ -16,6 +16,7 @@ type MarkdownNormalizeSwitches = {
   blankLineAroundFences: boolean;
   blankLineAroundLists: boolean;
   ensureSingleTrailingNewline: boolean;
+  collapseBlankLines: boolean;
 };
 
 function applyMarkdownNormalizeRules(text: string, opt: MarkdownNormalizeSwitches): string {
@@ -67,6 +68,10 @@ function applyMarkdownNormalizeRules(text: string, opt: MarkdownNormalizeSwitche
   }
 
   lines = fixStructuralBlankLines(lines, protectedLines, opt);
+
+  if (opt.collapseBlankLines) {
+    lines = collapseConsecutiveBlankLines(lines);
+  }
 
   let out = lines.join("\n");
   if (opt.ensureSingleTrailingNewline) {
@@ -225,6 +230,43 @@ function shouldNormalizeNoSpaceList(marker: string, content: string): boolean {
 
   const firstToken = content.match(/^\S+/)?.[0] ?? "";
   return !firstToken.includes("*");
+}
+
+function collapseConsecutiveBlankLines(lines: string[]): string[] {
+  const out: string[] = [];
+  let blankRun = 0;
+
+  for (let i = 0; i < lines.length; i += 1) {
+    if (isBlankLine(lines[i])) {
+      blankRun += 1;
+    } else {
+      flushCollapsedBlanks(out, blankRun);
+      blankRun = 0;
+      out.push(lines[i]);
+    }
+  }
+
+  flushCollapsedBlanks(out, blankRun);
+  return out;
+}
+
+function flushCollapsedBlanks(out: string[], blankRun: number) {
+  if (blankRun === 0) {
+    return;
+  }
+
+  if (blankRun < 3) {
+    for (let j = 0; j < blankRun; j += 1) {
+      out.push("");
+    }
+    return;
+  }
+
+  out.push("");
+  for (let j = 0; j < blankRun - 2; j += 1) {
+    out.push("<br />");
+  }
+  out.push("");
 }
 
 export { applyMarkdownNormalizeRules };

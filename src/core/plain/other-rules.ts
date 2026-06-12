@@ -22,7 +22,7 @@ const lineGapRule: Rule = {
   id: "insertLineGap",
   apply: (paras, opt) => {
     const gap = opt.lineGap;
-    if (gap === 0 || paras.length === 0) {
+    if (gap === 0 || paras.length === 0 || opt.preserveBlankLines) {
       return paras;
     }
 

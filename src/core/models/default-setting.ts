@@ -17,7 +17,8 @@ type MarkdownSettingKeys =
   | "mdListMarkerSpace"
   | "mdBlankLineAroundFences"
   | "mdBlankLineAroundLists"
-  | "mdEnsureSingleTrailingNewline";
+  | "mdEnsureSingleTrailingNewline"
+  | "mdCollapseBlankLines";
 
 type PlainSettingKeys = Exclude<keyof Option, MarkdownSettingKeys>;
 
@@ -50,6 +51,8 @@ const defaultPlainSettings: Pick<Option, PlainSettingKeys> = {
 
   fixOthers: true,
   insertSpaceAfterPercentSign: true,
+  preserveBlankLines: false,
+  noIndentFirstLine: false,
 };
 
 const defaultMarkdownSettings: Pick<Option, MarkdownSettingKeys> = {
@@ -64,6 +67,7 @@ const defaultMarkdownSettings: Pick<Option, MarkdownSettingKeys> = {
   mdBlankLineAroundFences: true,
   mdBlankLineAroundLists: true,
   mdEnsureSingleTrailingNewline: true,
+  mdCollapseBlankLines: false,
 };
 
 const defaultSettings: Option = {

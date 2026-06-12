@@ -400,3 +400,21 @@ textarea {
     min-height: 300px;
   }
 }
+
+.inline-tooltip {
+  z-index: 999;
+  max-width: 280px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #1f2a37;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.5;
+  pointer-events: none;
+  animation: tip-in 0.15s ease-out;
+}
+
+@keyframes tip-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

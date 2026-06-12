@@ -19,7 +19,7 @@ import {
   loadProfiles,
   saveProfiles,
 } from "./app/storage";
-import { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput, syncProfileUi } from "./app/ui";
+import { renderCks, syncCfgUi, syncModeRadios, syncModeUi, syncBrkInput, syncBrkInputByPreserve, syncProfileUi } from "./app/ui";
 import { supportsAdvancedRegex } from "../core/regex-support";
 import type { ConfigProfile, Mode } from "./app/types";
 
@@ -36,9 +36,13 @@ function startWebApp() {
   renderCks(defs, cfg, (key, checked) => {
     cfg[key] = checked;
     saveCfg(cfg);
+    if (key === "preserveBlankLines") {
+      syncBrkInputByPreserve(refs, checked);
+    }
   });
 
   syncCfgUi(defs, cfg, refs);
+  syncBrkInputByPreserve(refs, cfg.preserveBlankLines);
   syncModeRadios(mode);
   refs.mdPreview.checked = loadPreview();
   syncModeUi(mode, refs, mdOffKeys);
@@ -57,6 +61,9 @@ function startWebApp() {
     mode = target.value === "markdown" ? "markdown" : "plain";
     saveMode(mode);
     syncModeUi(mode, refs, mdOffKeys);
+    if (mode === "plain") {
+      syncBrkInputByPreserve(refs, cfg.preserveBlankLines);
+    }
   });
 
   refs.mdPreview.addEventListener("change", () => {
@@ -106,6 +113,7 @@ function startWebApp() {
     cfg = { ...defaultSettings, ...profile.cfg };
     saveCfg(cfg);
     syncCfgUi(defs, cfg, refs);
+    syncBrkInputByPreserve(refs, cfg.preserveBlankLines);
 
     mode = profile.mode;
     saveMode(mode);

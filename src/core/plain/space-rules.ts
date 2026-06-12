@@ -14,7 +14,7 @@ import type { Rule } from "./types";
 const rmBlankRule: Rule = {
   id: "deleteBlankLines",
   apply: (paras, opt) => {
-    if (!opt.deleteBlankLines) {
+    if (!opt.deleteBlankLines || opt.preserveBlankLines) {
       return paras;
     }
     return paras.filter((s) => s !== null);
@@ -28,7 +28,18 @@ const insIndentRule: Rule = {
     if (!opt.insertIndent) {
       return paras;
     }
-    return mapP(paras, (s) => `　　${s}`);
+    let firstSkipped = !opt.noIndentFirstLine;
+    for (let i = 0; i < paras.length; i += 1) {
+      const s = paras[i];
+      if (s != null) {
+        if (!firstSkipped) {
+          firstSkipped = true;
+          continue;
+        }
+        paras[i] = `　　${s}`;
+      }
+    }
+    return paras;
   },
 };
 
