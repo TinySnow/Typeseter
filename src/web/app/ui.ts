@@ -116,6 +116,10 @@ function syncBrkInputByPreserve(refs: Refs, preserve: boolean) {
   } else {
     syncBrkInput(refs);
   }
+  const delCk = findSettingCheckbox("deleteBlankLines");
+  if (delCk) {
+    delCk.disabled = preserve;
+  }
 }
 
 function syncProfileUi(

@@ -53,6 +53,8 @@ const defaultPlainSettings: Pick<Option, PlainSettingKeys> = {
   insertSpaceAfterPercentSign: true,
   preserveBlankLines: false,
   noIndentFirstLine: false,
+  insertBlankAfterTitle: false,
+  insertBlankAfterAuthor: false,
 };
 
 const defaultMarkdownSettings: Pick<Option, MarkdownSettingKeys> = {

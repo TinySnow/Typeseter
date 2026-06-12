@@ -255,18 +255,15 @@ function flushCollapsedBlanks(out: string[], blankRun: number) {
     return;
   }
 
-  if (blankRun < 3) {
-    for (let j = 0; j < blankRun; j += 1) {
-      out.push("");
-    }
+  if (blankRun === 1) {
+    out.push("");
     return;
   }
 
   out.push("");
-  for (let j = 0; j < blankRun - 2; j += 1) {
+  for (let j = 0; j < blankRun - 1; j += 1) {
     out.push("<br />");
   }
-  out.push("");
 }
 
 export { applyMarkdownNormalizeRules };

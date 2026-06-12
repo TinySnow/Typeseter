@@ -62,6 +62,16 @@ const defs: SettingDef[] = [
     containerId: "other-settings",
   },
   {
+    key: "insertBlankAfterTitle",
+    label: "标题后插入空行",
+    containerId: "other-settings",
+  },
+  {
+    key: "insertBlankAfterAuthor",
+    label: "作者后插入空行",
+    containerId: "other-settings",
+  },
+  {
     key: "mdIndentParagraphs",
     label: "md 段首缩进（跳过 H1-H6）",
     containerId: "other-settings",

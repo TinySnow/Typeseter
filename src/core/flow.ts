@@ -5,7 +5,7 @@
  */
 
 import type { Option } from "./models/option";
-import { lineGapRule } from "./plain/other-rules";
+import { lineGapRule, titleAuthorRule } from "./plain/other-rules";
 import { punctRule } from "./plain/punct-rule";
 import { fromParas as fromPs, toParas as toPs } from "./plain/shared";
 import { coreRule, insIndentRule, rmBlankRule } from "./plain/space-rules";
@@ -18,6 +18,7 @@ import type { Paras, Rule } from "./plain/types";
 const rules: ReadonlyArray<Rule> = [
   rmBlankRule,
   insIndentRule,
+  titleAuthorRule,
   coreRule,
   punctRule,
   lineGapRule,

@@ -48,6 +48,8 @@ interface Option {
   insertSpaceAfterPercentSign: boolean;
   preserveBlankLines: boolean;
   noIndentFirstLine: boolean;
+  insertBlankAfterTitle: boolean;
+  insertBlankAfterAuthor: boolean;
   mdCollapseBlankLines: boolean;
 }
 
