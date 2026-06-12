@@ -18,9 +18,6 @@ const titleAuthorRule: Rule = {
     if (!opt.insertBlankAfterTitle && !opt.insertBlankAfterAuthor) {
       return paras;
     }
-    if (opt.preserveBlankLines) {
-      return paras;
-    }
 
     const out: Paras = [];
     let nonNullIdx = 0;
