@@ -50,6 +50,8 @@ function safeMdOpt(opt: Option): Option {
     insertIndent: false,
     lineGap: 0,
     customedLineBreaker: "",
+    insertBlankAfterTitle: false,
+    insertBlankAfterAuthor: false,
   };
 }
 
